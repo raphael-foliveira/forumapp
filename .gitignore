@@ -1,0 +1,7 @@
+.env
+node_modules
+.eslintrc.json
+next-env.d.ts
+next.config.js
+.next
+.env.local
