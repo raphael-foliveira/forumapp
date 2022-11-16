@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import User from "../entities/user.entity";
-const jwt = require("jsonwebtoken");
+import jwt, { Secret } from "jsonwebtoken";
 
 export const getTokenHandler = async (req: Request, res: Response) => {
     const user = await User.objects.findOne({
@@ -11,11 +11,11 @@ export const getTokenHandler = async (req: Request, res: Response) => {
     if (user && user.password === req.body.password) {
         const token = await jwt.sign(
             {
-                id: req.body.id,
-                email: req.body.email,
                 username: req.body.username,
+                id: user.id,
+                email: user.email,
             },
-            process.env.JWT_SECRET,
+            process.env.JWT_SECRET as Secret,
             { expiresIn: "120h" }
         );
         res.status(201).json({ token: token });

@@ -11,7 +11,7 @@ if (typeof envDbPort !== "undefined") {
 }
 
 export const dataSource = new DataSource({
-    type: "postgres",
+    type: process.env.DATABASE_TYPE as "postgres" | "mysql" | "mongodb",
     host: process.env.DATABASE_HOST,
     port: databasePort,
     username: process.env.DATABASE_USERNAME,
