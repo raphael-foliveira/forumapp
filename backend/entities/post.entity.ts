@@ -1,14 +1,14 @@
 import User from "./user.entity";
 import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, OneToMany } from "typeorm";
 import { dataSource } from "../db/data-source";
-import { SubForum } from "./subforum.entity";
+import SubForum from "./subforum.entity";
 
 @Entity()
 export default class Post {
     static objects = dataSource.getRepository(Post);
 
     @PrimaryGeneratedColumn("uuid")
-    id: number;
+    id: string;
 
     @Column({ type: "varchar", length: 200 })
     title: string;
@@ -31,6 +31,6 @@ export default class Post {
     @ManyToOne(() => SubForum, (subForum) => subForum.posts)
     subForum: SubForum;
 
-    @Column({type: "timestamp", default: () => "CURRENT_TIMESTAMP"})
+    @Column({ type: "timestamp", default: () => "CURRENT_TIMESTAMP" })
     createdAt: Date;
 }

@@ -1,5 +1,4 @@
 import { NextFunction, Request, Response } from "express";
-import jwt from "jsonwebtoken";
 
 export interface RequestWithToken extends Request {
     token?: string;

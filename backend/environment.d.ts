@@ -1,6 +1,6 @@
 import { Secret } from "jsonwebtoken";
 
-export declare global {
+declare global {
     namespace NodeJS {
         interface ProcessEnv {
             DATABASE_TYPE: string;
@@ -13,3 +13,5 @@ export declare global {
         }
     }
 }
+
+export {};

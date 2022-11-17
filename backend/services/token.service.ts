@@ -2,7 +2,7 @@ import jwt, { JwtPayload, Secret } from "jsonwebtoken";
 import User from "../entities/user.entity";
 
 interface PayloadWithUserInfo extends JwtPayload {
-    id: number;
+    id: string;
     email: string;
 }
 

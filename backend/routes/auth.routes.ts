@@ -1,9 +1,9 @@
 import express from "express";
-import { getTokenHandler } from "../controllers/auth.controller";
+import { logInHandler, checkToken } from "../controllers/auth.controller";
 
 const authRouter = express.Router();
 
-authRouter.post("/login");
-authRouter.post("/get-token", getTokenHandler);
+authRouter.post("/login", logInHandler);
+authRouter.post("/verify-token", checkToken)
 
 export default authRouter;

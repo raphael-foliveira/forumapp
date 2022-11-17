@@ -10,7 +10,7 @@ export const getAllUsersHandler = async (req: Request, res: Response) => {
 export const getUserHandler = async (req: Request, res: Response) => {
     const user = await User.objects.findOne({
         where: {
-            id: parseInt(req.params.userId),
+            id: req.body.id
         },
         relations: ["posts"],
     });

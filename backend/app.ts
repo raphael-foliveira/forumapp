@@ -10,6 +10,8 @@ dataSource.initialize().then(() => {
     console.log("db started");
 });
 
+const port = process.env.APP_PORT || 8000
+
 const app = express();
 
 app.use(json());
@@ -19,6 +21,6 @@ app.use("/posts", postRouter);
 app.use("/subforums", subForumRouter);
 app.use("/auth", authRouter)
 
-app.listen(5173, () => {
-    console.log("Running on port 5173");
+app.listen(port, () => {
+    console.log(`Running on port ${port}`);
 });

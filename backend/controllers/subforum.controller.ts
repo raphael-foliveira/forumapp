@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import Post from "../entities/post.entity";
-import { SubForum } from "../entities/subforum.entity";
+import SubForum  from "../entities/subforum.entity";
 import { IsNull } from "typeorm";
 import { RequestWithToken } from "../middleware/auth.middleware";
 import { getUserFromToken } from "../services/token.service";

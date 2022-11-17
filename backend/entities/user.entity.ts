@@ -1,4 +1,4 @@
-import { Entity, Column, PrimaryGeneratedColumn, OneToMany } from "typeorm";
+import { Entity, Column, PrimaryGeneratedColumn, OneToMany, ManyToMany, JoinTable } from "typeorm";
 import { dataSource } from "../db/data-source";
 import Post from "./post.entity";
 
@@ -7,7 +7,7 @@ export default class User {
     static objects = dataSource.getRepository(User);
 
     @PrimaryGeneratedColumn("uuid")
-    id: number;
+    id: string;
 
     @Column({ unique: true })
     username: string;
@@ -23,4 +23,7 @@ export default class User {
 
     @OneToMany(() => Post, (post) => post.author)
     posts: Post[];
+
+    @OneToMany(() => User, (user) => user.friends)
+    friends: User[];
 }
