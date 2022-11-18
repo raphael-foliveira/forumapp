@@ -27,7 +27,6 @@ export default function NavBar() {
         <Skeleton isLoaded={!authData.loading}>
             <Flex direction={"row"} gap={5} padding="10px 20px" height={"80px"} alignItems="center">
                 <Link href="/">Home</Link>
-                <Link href="/subforums">SubForums</Link>
 
                 <Flex
                     direction={"row"}

@@ -20,6 +20,6 @@ export default class Thread {
     @Column({ nullable: true })
     image: string;
 
-    @ManyToOne(() => SubForum, (subForum) => subForum.posts)
+    @ManyToOne(() => SubForum, (subForum) => subForum.threads)
     subForum: SubForum;
 }

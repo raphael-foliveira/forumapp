@@ -31,7 +31,7 @@ export default class SubForum {
     image: string;
 
     @OneToMany(() => Thread, (post) => post.subForum, { onDelete: "CASCADE" })
-    posts: Thread[];
+    threads: Thread[];
 
     @Column({ type: "date", default: () => "CURRENT_TIMESTAMP" })
     createdAt: Date;

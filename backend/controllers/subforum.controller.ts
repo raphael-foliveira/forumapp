@@ -5,9 +5,10 @@ import { RequestWithToken } from "../middleware/auth.middleware";
 import { getUserFromToken } from "../services/token.service";
 
 export const getSubForumHandler = async (req: Request, res: Response) => {
+    console.log(req.params);
     const subForum = await SubForum.objects.findOne({
         where: {
-            id: req.params.subForumId,
+            name: req.params.subname,
         },
         relations: ["members", "posts"],
     });
@@ -15,9 +16,7 @@ export const getSubForumHandler = async (req: Request, res: Response) => {
         res.sendStatus(404);
         return;
     }
-    res.status(200).json({
-        subForum,
-    });
+    res.status(200).json(subForum);
 };
 
 export const getAllSubForumsHandler = async (req: Request, res: Response) => {

@@ -37,6 +37,6 @@ const subForumRouter = express.Router();
 subForumRouter.get("/", getAllSubForumsHandler);
 subForumRouter.post("/", verifyToken, upload.single("image"), createSubForumHandler);
 
-subForumRouter.get("/:subForumId", getSubForumHandler);
+subForumRouter.get("/:subname", getSubForumHandler);
 
 export default subForumRouter;
