@@ -1,11 +1,11 @@
 import { use } from "react";
 import PostCard from "./PostCard";
-import Post from "../../types/Post";
+import Thread from "../../types/Thread";
 import { getAllPosts } from "../../services/post-services";
 import Link from "next/link";
 
 export default function PostsList() {
-    const posts = use<Post[]>(getAllPosts());
+    const posts = use<Thread[]>(getAllPosts());
 
     return (
         <>

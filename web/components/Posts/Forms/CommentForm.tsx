@@ -10,7 +10,6 @@ export default function CommentForm() {
             action=""
             onSubmit={(event) => {
                 event.preventDefault();
-                console.log(comment);
             }}
         >
             <Textarea

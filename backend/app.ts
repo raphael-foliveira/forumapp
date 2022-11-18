@@ -2,25 +2,27 @@ import express, { json } from "express";
 import corsHandler from "./middleware/cors.middleware";
 import { dataSource } from "./db/data-source";
 import usersRouter from "./routes/user.routes";
-import postRouter from "./routes/post.routes";
+import threadRouter from "./routes/thread.routes";
 import subForumRouter from "./routes/subforum.routes";
 import authRouter from "./routes/auth.routes";
 
-dataSource.initialize().then(() => {
-    console.log("db started");
-});
 
-const port = process.env.APP_PORT || 8000
+const port = process.env.APP_PORT || 8000;
 
 const app = express();
 
 app.use(json());
 app.use(corsHandler);
+app.use(express.static("./"));
 app.use("/users", usersRouter);
-app.use("/posts", postRouter);
+app.use("/threads", threadRouter);
 app.use("/subforums", subForumRouter);
-app.use("/auth", authRouter)
+app.use("/auth", authRouter);
 
-app.listen(port, () => {
-    console.log(`Running on port ${port}`);
+dataSource.initialize().then(() => {
+    console.log("Db Running");
+    app.listen(port, () => {
+        console.log(`Server running on port ${port}`);
+    });
 });
+

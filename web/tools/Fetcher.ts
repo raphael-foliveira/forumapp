@@ -21,10 +21,28 @@ export default class Fetcher {
         const response = await fetch(this.apiUrl + endPoint, {
             method: "POST",
             headers: {
-                "content-type": "application/json",
+                "Content-Type": "application/json",
             },
             body: JSON.stringify(body),
         });
+
+        if (response.ok) {
+            return response.json();
+        }
+        return response.status;
+    };
+
+    static postFormData = async (endPoint: string, body: Object, authToken?: string) => {
+        const requestInit: RequestInit = {
+            method: "POST",
+            body: body as BodyInit,
+        };
+        if (authToken) {
+            requestInit.headers = {
+                Authorization: `Bearer ${authToken}`,
+            };
+        }
+        const response = await fetch(this.apiUrl + endPoint, requestInit);
         if (response.ok) {
             return response.json();
         }

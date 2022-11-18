@@ -1,4 +1,4 @@
-import Post from "./Post";
+import Thread from "./Thread";
 
 type User = {
     id: number;
@@ -6,7 +6,7 @@ type User = {
     email: string;
     password: string;
     profilePicture: string;
-    posts: Post[];
+    posts: Thread[];
     friends: User[];
 };
 

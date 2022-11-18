@@ -1,11 +1,12 @@
 import express, { Request } from "express";
 import fs from "fs";
-import {
-    getAllUsersHandler,
-    createUserHandler,
-    getUserHandler,
-} from "../controllers/user.controller";
 import multer from "multer";
+import {
+    createThreadHandler,
+    getAllThreadsHandler,
+    getThread
+} from "../controllers/thread.controller";
+import { verifyToken } from "../middleware/auth.middleware";
 
 const storage = multer.diskStorage({
     destination: (
@@ -13,7 +14,7 @@ const storage = multer.diskStorage({
         file: Express.Multer.File,
         cb: (error: Error | null, destination: string) => void
     ) => {
-        const dir = "./static/" + req.body.username + "/profile-picture";
+        const dir = "./static/subForums/" + req.body.name + "/image";
         if (!fs.existsSync(dir)) {
             fs.mkdirSync(dir, { recursive: true });
         }
@@ -31,11 +32,11 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage: storage });
 
-const usersRouter = express.Router();
+const threadRouter = express.Router();
 
-usersRouter.get("/", getAllUsersHandler);
-usersRouter.post("/", upload.single("profilePicture"), createUserHandler);
+threadRouter.get("/", getAllThreadsHandler);
+threadRouter.post("/", verifyToken, upload.single("image"), createThreadHandler);
 
-usersRouter.get("/:userId", getUserHandler);
+threadRouter.get("/:threadId", getThread);
 
-export default usersRouter;
+export default threadRouter;

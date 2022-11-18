@@ -1,35 +1,22 @@
+import { Entity, Column, OneToOne, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 import User from "./user.entity";
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, OneToMany } from "typeorm";
-import { dataSource } from "../db/data-source";
-import SubForum from "./subforum.entity";
 
 @Entity()
 export default class Post {
-    static objects = dataSource.getRepository(Post);
-
     @PrimaryGeneratedColumn("uuid")
     id: string;
 
-    @Column({ type: "varchar", length: 200 })
-    title: string;
+    @ManyToOne(() => User, (user) => user.posts)
+    author: User;
 
     @Column()
     content: string;
 
-    @ManyToOne(() => User, (user) => user.posts, { onDelete: "CASCADE" })
-    author: User;
-
-    @Column({ nullable: true })
-    image: string;
-
-    @OneToMany(() => Post, (post) => post.parent)
-    comments: Post[];
-
-    @ManyToOne(() => Post, (post) => post.comments, { nullable: true })
+    @ManyToOne(() => Post, (post) => post.children)
     parent: Post;
 
-    @ManyToOne(() => SubForum, (subForum) => subForum.posts)
-    subForum: SubForum;
+    @OneToMany(() => Post, (post) => post.parent, { onDelete: "CASCADE" })
+    children: Post[];
 
     @Column({ type: "timestamp", default: () => "CURRENT_TIMESTAMP" })
     createdAt: Date;

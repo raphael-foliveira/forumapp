@@ -1,7 +1,6 @@
 import { Request, Response } from "express";
-import Post from "../entities/post.entity";
-import SubForum  from "../entities/subforum.entity";
-import { IsNull } from "typeorm";
+import Thread from "../entities/thread.entity";
+import SubForum from "../entities/subforum.entity";
 import { RequestWithToken } from "../middleware/auth.middleware";
 import { getUserFromToken } from "../services/token.service";
 
@@ -10,20 +9,14 @@ export const getSubForumHandler = async (req: Request, res: Response) => {
         where: {
             id: req.params.subForumId,
         },
+        relations: ["members", "posts"],
     });
     if (!subForum) {
         res.sendStatus(404);
         return;
     }
-    const threads = await Post.objects.find({
-        where: {
-            subForum: subForum,
-            parent: IsNull(),
-        },
-    });
     res.status(200).json({
         subForum,
-        threads,
     });
 };
 
@@ -32,7 +25,7 @@ export const getAllSubForumsHandler = async (req: Request, res: Response) => {
         order: {
             createdAt: "DESC",
         },
-        relations: ["admin"],
+        relations: ["admin", "members", "posts"],
     });
     res.status(200).json(allSubForums);
 };
@@ -49,6 +42,8 @@ export const createSubForumHandler = async (req: RequestWithToken, res: Response
             admin: authenticatedUser,
             name: req.body.name,
             description: req.body.description,
+            image: req.file?.path || "",
+            members: [authenticatedUser],
         };
 
         const subForumObject = SubForum.objects.create(subForumData);

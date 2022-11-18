@@ -1,14 +1,10 @@
-import Fetcher from "../tools/fetcher";
-import Post from "../types/Post";
+import Fetcher from "../tools/Fetcher";
+import Thread from "../types/Thread";
 
-export const getAllPosts = async (): Promise<Post[]> => {
-    return Fetcher.get("/posts");
-};
-
-export const getAllThreads = async (): Promise<Post[]> => {
+export const getAllPosts = async (): Promise<Thread[]> => {
     return Fetcher.get("/threads");
 };
 
-export const getPost = async (postId: string): Promise<Post> => {
-    return Fetcher.retrieve("/posts", postId);
+export const getPost = async (threadId: string): Promise<Thread> => {
+    return Fetcher.retrieve("/threads", threadId);
 };

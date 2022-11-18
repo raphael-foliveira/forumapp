@@ -1,14 +1,15 @@
 import User from "./User";
-import Post from "./Post";
+import Thread from "./Thread";
 
 type SubForum = {
     id: string;
     name: string;
     description: string;
     admin: User;
-    posts: Post[];
-    createdAt: Date;
+    posts: Thread[];
+    createdAt: string;
     members: User[];
+    image: string;
 };
 
 export default SubForum;

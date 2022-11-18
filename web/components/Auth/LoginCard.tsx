@@ -1,11 +1,11 @@
 "use client";
-import { Card, Text, Input, FormLabel, FormControl, Flex, Button } from "@chakra-ui/react";
-import { ChangeEvent, FormEvent, useContext, useState } from "react";
-import Link from "next/link";
+import { Button, Card, Flex, FormControl, FormLabel, Input, Text } from "@chakra-ui/react";
 import styled from "@emotion/styled";
-import { loginUser } from "../../services/auth-services";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { ChangeEvent, FormEvent, useState } from "react";
 import { useDispatch } from "react-redux";
+import { loginUser } from "../../services/auth-services";
 import { authorize } from "../../store/auth/authSlice";
 
 const BlueLinks = styled.div`
@@ -84,7 +84,7 @@ export default function LoginCard() {
 
                     <BlueLinks>
                         <Text as="p" fontSize={"12px"} textAlign="end">
-                            or <Link href="/#">Register</Link>
+                            or <Link href="/register">Register</Link>
                         </Text>
                     </BlueLinks>
                 </Flex>

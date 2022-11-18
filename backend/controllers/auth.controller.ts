@@ -21,7 +21,7 @@ export const logInHandler = async (req: Request, res: Response) => {
         res.status(201).json({ token: token, username: user.username, userId: user.id });
         return;
     }
-    res.sendStatus(400);
+    res.sendStatus(404);
 };
 
 export const checkToken = async (req: Request, res: Response) => {

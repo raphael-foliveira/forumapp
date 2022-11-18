@@ -1,5 +1,5 @@
 "use client";
-import LoginCard from "../../components/Login/LoginCard";
+import LoginCard from "../../components/Auth/LoginCard";
 
 
 export default function Login() {

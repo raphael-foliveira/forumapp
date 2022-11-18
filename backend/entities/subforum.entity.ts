@@ -1,6 +1,14 @@
-import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, OneToMany, ManyToMany, JoinTable } from "typeorm";
+import {
+    Entity,
+    Column,
+    PrimaryGeneratedColumn,
+    ManyToOne,
+    OneToMany,
+    ManyToMany,
+    JoinTable,
+} from "typeorm";
 import { dataSource } from "../db/data-source";
-import Post from "./post.entity";
+import Thread from "./thread.entity";
 import User from "./user.entity";
 
 @Entity()
@@ -10,7 +18,7 @@ export default class SubForum {
     @PrimaryGeneratedColumn("uuid")
     id: string;
 
-    @Column()
+    @Column({ unique: true })
     name: string;
 
     @Column()
@@ -19,13 +27,16 @@ export default class SubForum {
     @ManyToOne(() => User)
     admin: User;
 
-    @OneToMany(() => Post, (post) => post.subForum)
-    posts: Post[];
+    @Column()
+    image: string;
+
+    @OneToMany(() => Thread, (post) => post.subForum, { onDelete: "CASCADE" })
+    posts: Thread[];
 
     @Column({ type: "date", default: () => "CURRENT_TIMESTAMP" })
     createdAt: Date;
 
-    @ManyToMany(() => User)
+    @ManyToMany(() => User, (user) => user.subForums)
     @JoinTable()
     members: User[];
 }

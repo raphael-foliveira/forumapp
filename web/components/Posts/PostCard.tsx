@@ -1,7 +1,7 @@
 import { Text, Card } from "@chakra-ui/react";
-import Post from "../../types/Post";
+import Thread from "../../types/Thread";
 
-export default function PostCard({ post }: { post: Post }) {
+export default function PostCard({ post }: { post: Thread }) {
 
     return (
         <Card padding={5}>

@@ -1,6 +1,17 @@
-import { Entity, Column, PrimaryGeneratedColumn, OneToMany, ManyToMany, JoinTable } from "typeorm";
+import {
+    Entity,
+    Column,
+    PrimaryGeneratedColumn,
+    OneToMany,
+    ManyToMany,
+    JoinTable,
+    ManyToOne,
+} from "typeorm";
 import { dataSource } from "../db/data-source";
+import Thread from "./thread.entity";
+import Comment from "./comment.entity";
 import Post from "./post.entity";
+import SubForum from "./subforum.entity";
 
 @Entity()
 export default class User {
@@ -21,9 +32,12 @@ export default class User {
     @Column({ nullable: true })
     profilePicture: string;
 
-    @OneToMany(() => Post, (post) => post.author)
+    @OneToMany(() => Post, (post) => post.author, { onDelete: "SET NULL" })
     posts: Post[];
 
     @OneToMany(() => User, (user) => user.friends)
     friends: User[];
+
+    @ManyToMany(() => SubForum, (subForum) => subForum.members)
+    subForums: SubForum[];
 }
