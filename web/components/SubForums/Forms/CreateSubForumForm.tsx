@@ -1,15 +1,22 @@
 import { Box, Button, FormLabel, Input, Textarea, Wrap } from "@chakra-ui/react";
-import { ChangeEvent, useState } from "react";
+import { ChangeEvent, Dispatch, SetStateAction, useState } from "react";
 import { useSelector } from "react-redux";
 import { createSubForum } from "../../../services/subforums-services";
 import { RootState } from "../../../store/store";
-import Fetcher from "../../../tools/Fetcher";
+import SubForum from "../../../types/SubForum";
 
-export default function CreateSubForumForm({ isHidden }: { isHidden: boolean }) {
+export default function CreateSubForumForm({
+    isHidden,
+    allSubs,
+    setAllSubs,
+}: {
+    isHidden: boolean;
+    allSubs: SubForum[];
+    setAllSubs: Dispatch<SetStateAction<SubForum[]>>;
+}) {
     const [formState, setFormState] = useState<CreateSubForm>({
         name: "",
         description: "",
-        image: null,
     });
     const authData = useSelector((state: RootState) => state.auth);
 
@@ -46,7 +53,15 @@ export default function CreateSubForumForm({ isHidden }: { isHidden: boolean }) 
                     if (formState.image) {
                         formData.append("image", formState.image);
                     }
-                    return createSubForum(formData, authData.token);
+                    const newSub = await createSubForum(formData, authData.token);
+                    if (newSub) {
+                        setAllSubs((prevState) => {
+                            return [
+                                ...prevState,
+                                newSub,
+                            ];
+                        });
+                    }
                 }}
             >
                 <Wrap>
@@ -66,5 +81,5 @@ export default function CreateSubForumForm({ isHidden }: { isHidden: boolean }) 
 export type CreateSubForm = {
     name: string;
     description: string;
-    image: File | null;
+    image?: File;
 };

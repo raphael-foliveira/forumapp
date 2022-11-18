@@ -11,8 +11,8 @@ export default function Home() {
     const [allSubs, setAllSubs] = useState<SubForum[]>([]);
 
     useEffect(() => {
-        getAllSubForums().then((subs) => {
-            setAllSubs(subs);
+        getAllSubForums().then((subForums) => {
+            setAllSubs(subForums);
         });
     }, []);
 
@@ -23,8 +23,8 @@ export default function Home() {
     return (
         <>
             <Button onClick={toggleHiddenForm}>Create Sub</Button>
-            <CreateSubForumForm isHidden={isHidden} />
-            <SubForumsList />
+            <CreateSubForumForm isHidden={isHidden} allSubs={allSubs} setAllSubs={setAllSubs} />
+            <SubForumsList allSubs={allSubs} />
         </>
     );
 }

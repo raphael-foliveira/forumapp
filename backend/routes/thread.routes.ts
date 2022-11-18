@@ -35,8 +35,8 @@ const upload = multer({ storage: storage });
 const threadRouter = express.Router();
 
 threadRouter.get("/", getAllThreadsHandler);
-threadRouter.post("/", verifyToken, upload.single("image"), createThreadHandler);
+threadRouter.post("/:name", verifyToken, upload.single("image"), createThreadHandler);
 
-threadRouter.get("/:threadId", getThread);
+threadRouter.get("/:id", getThread);
 
 export default threadRouter;

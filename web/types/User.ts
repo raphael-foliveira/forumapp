@@ -1,7 +1,7 @@
 import Thread from "./Thread";
 
 type User = {
-    id: number;
+    id: string;
     username: string;
     email: string;
     password: string;

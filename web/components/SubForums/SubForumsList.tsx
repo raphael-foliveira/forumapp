@@ -3,14 +3,8 @@ import { getAllSubForums } from "../../services/subforums-services";
 import SubForum from "../../types/SubForum";
 import SubForumCard from "./SubForumCard";
 
-export default function SubForumsList() {
-    const [allSubs, setAllSubs] = useState<SubForum[]>([]);
-
-    useEffect(() => {
-        getAllSubForums().then((subForums) => {
-            setAllSubs(subForums);
-        });
-    }, []);
+export default function SubForumsList({allSubs}: {allSubs: SubForum[]}) {
+    
 
     return (
         <>

@@ -1,8 +1,11 @@
 import { Entity, Column, OneToOne, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import { dataSource } from "../db/data-source";
 import User from "./user.entity";
 
 @Entity()
 export default class Post {
+    static objects = dataSource.getRepository(Post);
+
     @PrimaryGeneratedColumn("uuid")
     id: string;
 
@@ -12,7 +15,7 @@ export default class Post {
     @Column()
     content: string;
 
-    @ManyToOne(() => Post, (post) => post.children)
+    @ManyToOne(() => Post, (post) => post.children, { nullable: true })
     parent: Post;
 
     @OneToMany(() => Post, (post) => post.parent, { onDelete: "CASCADE" })

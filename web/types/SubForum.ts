@@ -6,7 +6,7 @@ type SubForum = {
     name: string;
     description: string;
     admin: User;
-    posts: Thread[];
+    threads: Thread[];
     createdAt: string;
     members: User[];
     image: string;
