@@ -7,7 +7,7 @@ export async function loginUser(credentials: LogInCredentials) {
 }
 
 export async function verifyToken(token: string) {
-    return Fetcher.post("/auth/verify-token", { token });
+    return Fetcher.post("/auth/verify-token", {token});
 }
 
 export async function registerUser(userData: FormData) {

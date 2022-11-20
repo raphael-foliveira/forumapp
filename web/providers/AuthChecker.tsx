@@ -1,7 +1,7 @@
 import { ReactNode } from "react";
 import { useDispatch } from "react-redux";
-import { verifyToken } from "../../services/auth-services";
-import { deauthorize, authorize } from "../../store/auth/authSlice";
+import { verifyToken } from "../services/auth-services";
+import { deauthorize, authorize } from "../store/auth/authSlice";
 
 export default function AuthChecker({
     localToken,
@@ -16,7 +16,7 @@ export default function AuthChecker({
         dispatch(deauthorize());
     } else {
         verifyToken(localToken).then((token) => {
-            if (token) {
+            if (token.id) {
                 dispatch(authorize({ token: localToken, userId: token.id }));
             } else {
                 localStorage.clear();

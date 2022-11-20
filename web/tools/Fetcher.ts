@@ -52,7 +52,7 @@ export default class Fetcher {
         if (authToken) {
             requestInit.headers = {
                 ...requestInit.headers,
-                Authorization: `Bearer ${authToken}`,
+                "Authorization": `Bearer ${authToken}`,
             };
         }
 

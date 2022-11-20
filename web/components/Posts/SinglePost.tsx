@@ -1,26 +1,25 @@
 "use client";
-import Thread from "../../types/Thread";
-import { Text, Image, Card } from "@chakra-ui/react";
-import PostCard from "../Threads/ThreadCard";
+import { Text } from "@chakra-ui/react";
+import { useEffect, useState } from "react";
 import { getPost } from "../../services/post-services";
-import { use } from "react";
+import Post from "../../types/Post";
 
 export default function SinglePost({ postId }: { postId: string }) {
-    const post = use<Thread>(getPost(postId));
+    const [post, setPost] = useState<Post>();
+
+    useEffect(() => {
+        getPost(postId).then((postInfo) => {
+            setPost(postInfo);
+        });
+    }, []);
 
     return (
         <>
-            <Card>
-                <Text as="h1" fontSize={"lg"}>
-                    {post.title}
-                </Text>
-                {post.image && <Image src={post.image} />}
-                <Text as="p">{post.content}</Text>
-                <Text as="p">by {post.author?.username || ""}</Text>
-            </Card>
-            {post.comments.map((comment: Thread) => {
-                return <PostCard thread={comment} />;
-            })}
+            {post && (
+                <>
+                    
+                </>
+            )}
         </>
     );
 }

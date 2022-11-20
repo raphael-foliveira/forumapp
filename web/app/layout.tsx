@@ -1,7 +1,7 @@
 import NavBar from "../components/NavBar";
 import "./globals.css";
 import styles from "./page.module.css";
-import { Providers } from "../components/providers/Providers";
+import { Providers } from "../providers/Providers";
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
     return (

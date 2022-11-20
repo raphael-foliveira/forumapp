@@ -5,7 +5,7 @@ import usersRouter from "./routes/user.routes";
 import threadRouter from "./routes/thread.routes";
 import subForumRouter from "./routes/subforum.routes";
 import authRouter from "./routes/auth.routes";
-
+import postRouter from "./routes/post.routes";
 
 const port = process.env.APP_PORT || 8000;
 
@@ -18,6 +18,7 @@ app.use("/users", usersRouter);
 app.use("/threads", threadRouter);
 app.use("/subforums", subForumRouter);
 app.use("/auth", authRouter);
+app.use("/posts", postRouter);
 
 dataSource.initialize().then(() => {
     console.log("Db Running");
@@ -25,4 +26,3 @@ dataSource.initialize().then(() => {
         console.log(`Server running on port ${port}`);
     });
 });
-

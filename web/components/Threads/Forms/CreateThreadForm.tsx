@@ -1,9 +1,13 @@
 "use client";
 import { Box, Button, FormControl, FormLabel, Input, Text, Textarea } from "@chakra-ui/react";
+import { useRouter } from "next/navigation";
+import { Router } from "next/router";
 import { ChangeEvent, FormEvent, useState } from "react";
 import { useSelector } from "react-redux";
+import { createPost } from "../../../services/post-services";
 import { RootState } from "../../../store/store";
 import Fetcher from "../../../tools/Fetcher";
+import Post from "../../../types/Post";
 
 export default function CreateThreadForm({ subForumName }: { subForumName: string }) {
     const [formState, setFormState] = useState<ThreadFormState>({
@@ -11,6 +15,7 @@ export default function CreateThreadForm({ subForumName }: { subForumName: strin
         content: "",
     });
     const authData = useSelector((state: RootState) => state.auth);
+    const router = useRouter();
 
     const handleChange = (event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         setFormState((prevState) => ({
@@ -36,16 +41,30 @@ export default function CreateThreadForm({ subForumName }: { subForumName: strin
         }
     };
 
-    const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+    const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
         event.preventDefault();
+        const newPost = await createPost(
+            { content: formState.content, parent: null },
+            authData.token
+        );
+        if (!newPost) {
+            return;
+        }
         const formData = new FormData();
         formData.append("subForum", subForumName);
         formData.append("title", formState.title);
-        formData.append("content", formState.content);
+        formData.append("postId", newPost.id);
         if (formState.threadImage) {
             formData.append("threadImage", formState.threadImage);
         }
-        Fetcher.postFormData(`/threads/${subForumName}`, formData, authData.token);
+        const newThread = await Fetcher.postFormData(
+            `/threads/${subForumName}`,
+            formData,
+            authData.token
+        );
+        if (newThread) {
+            router.push(`/${subForumName}`);
+        }
     };
 
     return (

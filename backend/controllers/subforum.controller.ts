@@ -1,11 +1,11 @@
 import { Request, Response } from "express";
-import Thread from "../entities/thread.entity";
+import { dataSource } from "../db/data-source";
 import SubForum from "../entities/subforum.entity";
 import { AuthenticatedRequest } from "../middleware/auth.middleware";
-import { getUserFromToken } from "../services/token.service";
-import { dataSource } from "../db/data-source";
 
 export const getSubForumHandler = async (req: Request, res: Response) => {
+    console.log(`Searching for ${req.params.name} Sub...`);
+
     const subForum = await SubForum.objects.findOne({
         where: {
             name: req.params.name,
@@ -13,9 +13,14 @@ export const getSubForumHandler = async (req: Request, res: Response) => {
         relations: ["members", "threads", "admin"],
     });
     if (!subForum) {
+        console.log("Sub not found");
+
         res.sendStatus(404);
         return;
     }
+    console.log("Found Sub:");
+    console.log(subForum);
+
     res.status(200).json(subForum);
 };
 
@@ -42,36 +47,39 @@ export const updateSubForumHandler = async (req: Request, res: Response) => {
 
 export const addMemberHandler = async (req: AuthenticatedRequest, res: Response) => {
     try {
-
         const response = await dataSource
-        .createQueryBuilder()
-        .insert()
-        .into("sub_forum_members_user")
-        .values(req.body)
-        .execute();
-        
+            .createQueryBuilder()
+            .insert()
+            .into("sub_forum_members_user")
+            .values(req.body)
+            .execute();
+        console.log(response);
+
         res.status(200).json(response);
     } catch (e) {
-        res.status(400).json(e)
+        console.log(e);
+        res.status(500).json(e);
     }
 };
 
 export const deleteMemberHandler = async (req: AuthenticatedRequest, res: Response) => {
     try {
-
         const response = await dataSource
-        .createQueryBuilder()
-        .delete()
-        .from("sub_forum_members_user")
-        .where({
-            subForumId: req.params.id,
-            userId: req.params.memberid,
-        })
-        .execute();
-        
+            .createQueryBuilder()
+            .delete()
+            .from("sub_forum_members_user")
+            .where({
+                subForumId: req.params.id,
+                userId: req.params.memberid,
+            })
+            .execute();
+        console.log(response);
+
         res.status(200);
     } catch (e) {
-        res.status(400).json(e)
+        console.log(e);
+
+        res.status(500).json(e);
     }
 };
 

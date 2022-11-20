@@ -6,7 +6,7 @@ type Post = {
     content: string;
     parent: Post;
     children: Post[];
-    createdAt: Date;
+    createdAt: string;
 };
 
 export default Post;

@@ -1,17 +1,18 @@
 import { use } from "react";
-import PostCard from "../Threads/ThreadCard";
+import ThreadCard from "../Threads/ThreadCard";
 import Thread from "../../types/Thread";
 import { getAllPosts } from "../../services/post-services";
 import Link from "next/link";
+import { getAllThreads } from "../../services/thread-services";
 
 export default function PostsList() {
-    const posts = use<Thread[]>(getAllPosts());
+    const threads = use<Thread[]>(getAllThreads());
 
     return (
         <>
-            {posts.map((post) => (
-                <Link href={`/posts/${post.id}`} key={post.id}>
-                    <PostCard thread={post} />
+            {threads.map((thread) => (
+                <Link href={`/posts/${thread.id}`} key={thread.id}>
+                    <ThreadCard threadId={thread.id} />
                 </Link>
             ))}
         </>

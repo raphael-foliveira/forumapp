@@ -8,34 +8,12 @@ import {
 } from "../controllers/thread.controller";
 import { verifyToken } from "../middleware/auth.middleware";
 
-const storage = multer.diskStorage({
-    destination: (
-        req: Request,
-        file: Express.Multer.File,
-        cb: (error: Error | null, destination: string) => void
-    ) => {
-        const dir = "./static/subForums/" + req.body.name + "/image";
-        if (!fs.existsSync(dir)) {
-            fs.mkdirSync(dir, { recursive: true });
-        }
-
-        cb(null, dir);
-    },
-    filename: (
-        req: Request,
-        file: Express.Multer.File,
-        cb: (error: any, filename: string) => void
-    ) => {
-        cb(null, file.originalname);
-    },
-});
-
-const upload = multer({ storage: storage });
+const upload = multer({dest: "./static/threads"});
 
 const threadRouter = express.Router();
 
 threadRouter.get("/", getAllThreadsHandler);
-threadRouter.post("/:name", verifyToken, upload.single("image"), createThreadHandler);
+threadRouter.post("/:name", verifyToken, upload.single("threadImage"), createThreadHandler);
 
 threadRouter.get("/:id", getThread);
 

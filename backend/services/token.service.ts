@@ -8,11 +8,22 @@ interface PayloadWithUserInfo extends JwtPayload {
 
 export const getUserFromToken = async (token: string) => {
     const decodedToken = jwt.verify(token, process.env.JWT_SECRET as Secret) as PayloadWithUserInfo;
+    console.log("Authenticating user...");
+    try {
 
-    const authenticatedUser = await User.objects.findOne({
-        where: {
-            id: decodedToken.id,
-        },
-    });
-    return authenticatedUser;
+        const authenticatedUser = await User.objects.findOne({
+            where: {
+                id: decodedToken.id,
+            },
+            select: {
+                id: true,
+                username: true,
+                email: true,
+                profilePicture: true,
+            },
+        });
+        return authenticatedUser;
+    } catch (e) {
+        return null
+    }
 };

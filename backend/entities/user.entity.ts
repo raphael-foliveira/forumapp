@@ -1,15 +1,5 @@
-import {
-    Entity,
-    Column,
-    PrimaryGeneratedColumn,
-    OneToMany,
-    ManyToMany,
-    JoinTable,
-    ManyToOne,
-} from "typeorm";
+import { Column, Entity, ManyToMany, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 import { dataSource } from "../db/data-source";
-import Thread from "./thread.entity";
-import Comment from "./comment.entity";
 import Post from "./post.entity";
 import SubForum from "./subforum.entity";
 
@@ -26,7 +16,7 @@ export default class User {
     @Column({ unique: true })
     email: string;
 
-    @Column()
+    @Column({ select: false })
     password: string;
 
     @Column({ nullable: true })

@@ -18,54 +18,63 @@ export const getThread = async (req: Request, res: Response) => {
         },
         relations: ["post"],
     });
-    if (singleThread) {
-        res.status(200).json(singleThread);
+    if (!singleThread) {
+        console.log(`Thread ${req.params.id} not found`);
+
+        res.sendStatus(404);
         return;
     }
-    res.sendStatus(404);
+    console.log("Found thread:");
+    console.log(singleThread);
+
+    res.status(200).json(singleThread);
 };
 
 export const createThreadHandler = async (req: AuthenticatedRequest, res: Response) => {
-    if (!req.body.name || !req.body.description || !req.user) {
+    if (!req.params.name || !req.body.postId || !req.user) {
         res.sendStatus(400);
         return;
     }
+
     const subForum = await SubForum.objects.findOne({
         where: {
             name: req.params.name,
         },
     });
+
     if (!subForum) {
-        res.sendStatus(400).json({
+        res.status(400).json({
             message: "SubForum does not exist.",
         });
         return;
     }
 
-    const postData = {
-        author: req.user,
-        content: req.body.content,
-    };
+    const post = await Post.objects.findOne({
+        where: {
+            id: req.body.postId,
+        },
+    });
 
-    const postObject = Post.objects.create(postData);
-    const newPost = await Post.objects.save(postObject);
+    if (!post) {
+        res.status(404).json({
+            error: "Post not found",
+        });
+        return;
+    }
 
     const threadData = {
         title: req.body.title,
         content: req.body.content,
         image: req.file?.path || "",
         subForum: subForum,
-        post: newPost,
+        post: post,
     };
 
-    const threadObject = Thread.objects.create(threadData);
-    const newThread = await Thread.objects.save(threadObject);
-
-    if (!newThread) {
-        res.status(400).json({
-            message: "Thread could not be created.",
-        });
-        return;
+    try {
+        const threadObject = Thread.objects.create(threadData);
+        const newThread = await Thread.objects.save(threadObject);
+        res.status(201).json(newThread);
+    } catch (e) {
+        res.status(400).json(e);
     }
-    res.status(201).json(newThread);
 };

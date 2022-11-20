@@ -1,7 +1,7 @@
 "use client";
 import { ChakraProvider } from "@chakra-ui/react";
 import { ReactNode, useEffect, useState } from "react";
-import { store } from "../../store/store";
+import { store } from "../store/store";
 import { Provider } from "react-redux";
 import AuthChecker from "./AuthChecker";
 
