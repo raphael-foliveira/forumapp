@@ -1,11 +1,12 @@
 "use client";
-import { Text, Image, Button } from "@chakra-ui/react";
+import { Box, Image, Text } from "@chakra-ui/react";
 import Post from "../../types/Post";
 import Thread from "../../types/Thread";
+import SinglePost from "../Posts/SinglePost";
 
 export default function SingleThread({ thread, post }: { thread: Thread; post: Post }) {
     return (
-        <>
+        <Box>
             <Text as="h1" fontWeight={"bold"} fontSize="2xl">
                 {thread.title}
             </Text>
@@ -14,8 +15,7 @@ export default function SingleThread({ thread, post }: { thread: Thread; post: P
                 maxW="800px"
                 h={"auto"}
             />
-            <Text>{post.content}</Text>
-            <Button>Add Comment</Button>
-        </>
+            <SinglePost post={post} showComments={true} />
+        </Box>
     );
 }

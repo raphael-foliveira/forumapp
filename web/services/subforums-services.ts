@@ -5,7 +5,7 @@ export const getAllSubForums = async (): Promise<SubForum[]> => {
     return Fetcher.get("/subforums");
 };
 
-export const getSubForum = async (subName: string): Promise<SubForum | number> => {
+export const getSubForum = async (subName: string): Promise<SubForum> => {
     return Fetcher.get(`/subforums/${subName}`);
 };
 

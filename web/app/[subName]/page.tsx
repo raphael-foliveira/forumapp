@@ -7,8 +7,8 @@ import SubForum from "../../types/SubForum";
 
 export default function SubForumPage({ params }: { params: { subName: string } }) {
     const subForum = use(getSubForum(params.subName));
-    if (subForum === 404) {
-        redirect("/")
+    if (!subForum.name) {
+        redirect("/");
     }
 
     return (

@@ -5,23 +5,29 @@ import { AuthenticatedRequest } from "../middleware/auth.middleware";
 
 export const getSubForumHandler = async (req: Request, res: Response) => {
     console.log(`Searching for ${req.params.name} Sub...`);
+    try {
+        const subForum = await SubForum.objects.findOne({
+            where: {
+                name: req.params.name,
+            },
+            relations: ["members", "threads", "admin"],
+        });
+        if (!subForum) {
+            console.log("Sub not found");
 
-    const subForum = await SubForum.objects.findOne({
-        where: {
-            name: req.params.name,
-        },
-        relations: ["members", "threads", "admin"],
-    });
-    if (!subForum) {
-        console.log("Sub not found");
+            res.sendStatus(404);
+            return;
+        }
+        console.log("Found Sub:");
+        console.log(subForum);
 
-        res.sendStatus(404);
-        return;
+        res.status(200).json(subForum);
+    } catch {
+        console.log("Get SubForum Failed");
+        res.status(400).json({
+            message: "Invalid Id.",
+        });
     }
-    console.log("Found Sub:");
-    console.log(subForum);
-
-    res.status(200).json(subForum);
 };
 
 export const getAllSubForumsHandler = async (req: Request, res: Response) => {

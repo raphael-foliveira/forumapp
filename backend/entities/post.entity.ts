@@ -23,4 +23,5 @@ export default class Post {
 
     @Column({ type: "timestamp", default: () => "CURRENT_TIMESTAMP" })
     createdAt: Date;
+
 }
