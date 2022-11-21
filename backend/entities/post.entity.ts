@@ -1,6 +1,7 @@
 import { Entity, Column, OneToOne, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 import { dataSource } from "../db/data-source";
 import User from "./user.entity";
+import Vote from "./vote.entity";
 
 @Entity()
 export default class Post {
@@ -23,5 +24,8 @@ export default class Post {
 
     @Column({ type: "timestamp", default: () => "CURRENT_TIMESTAMP" })
     createdAt: Date;
+
+    @OneToMany(() => Vote, (vote) => vote.post)
+    votes: Vote[];
 
 }

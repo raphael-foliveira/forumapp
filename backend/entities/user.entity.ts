@@ -2,6 +2,7 @@ import { Column, Entity, ManyToMany, OneToMany, PrimaryGeneratedColumn } from "t
 import { dataSource } from "../db/data-source";
 import Post from "./post.entity";
 import SubForum from "./subforum.entity";
+import Vote from "./vote.entity";
 
 @Entity()
 export default class User {
@@ -30,4 +31,7 @@ export default class User {
 
     @ManyToMany(() => SubForum, (subForum) => subForum.members)
     subForums: SubForum[];
+
+    @OneToMany(() => Vote, (vote) => vote.user)
+    votes: Vote[];
 }

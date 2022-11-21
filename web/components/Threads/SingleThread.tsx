@@ -15,7 +15,7 @@ export default function SingleThread({ thread, post }: { thread: Thread; post: P
                 maxW="800px"
                 h={"auto"}
             />
-            <SinglePost post={post} showComments={true} />
+            <SinglePost post={post}  />
         </Box>
     );
 }

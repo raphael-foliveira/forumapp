@@ -1,20 +1,21 @@
 "use client";
 import {
-    Card,
-    Text,
     Accordion,
-    AccordionItem,
     AccordionButton,
+    AccordionItem,
     AccordionPanel,
     Box,
+    Flex,
+    Text,
 } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import { getPost } from "../../services/post-services";
 import { parseDate } from "../../tools/parseDate";
 import Post from "../../types/Post";
 import CreateCommentForm from "../Comments/Forms/CreateCommentForm";
+import VoteControls from "./VoteControls/VoteControls";
 
-export default function SinglePost({ post, showComments }: { post: Post; showComments: boolean }) {
+export default function SinglePost({ post }: { post: Post }) {
     const [allComments, setAllComments] = useState<Post[]>([]);
 
     const handleSubmitComment = (newComment: Post) => {
@@ -39,21 +40,24 @@ export default function SinglePost({ post, showComments }: { post: Post; showCom
 
     return (
         <>
-            <Text>{post.content}</Text>
-            <Text marginTop={"10px"} fontSize="sm">
-                <em>
-                    created at {parseDate(post.createdAt)} by {post.author.username}
-                </em>
-            </Text>
+            <Flex justifyContent={"space-between"}>
+                <Box>
+                    <Text>{post.content}</Text>
+                    <Text marginTop={"10px"} fontSize="sm">
+                        <em>
+                            created at {parseDate(post.createdAt)} by {post.author.username}
+                        </em>
+                    </Text>
+                </Box>
+                <VoteControls post={post} />
+            </Flex>
             <CreateCommentForm parent={post} handleSubmitComment={handleSubmitComment} />
             {allComments.length > 0 && (
                 <Accordion allowMultiple>
                     <AccordionItem>
                         <AccordionButton>
                             <Text>
-                                {" "}
                                 <em>
-                                    {" "}
                                     {allComments.length > 1
                                         ? allComments.length + " comments"
                                         : "1 comment"}
@@ -63,8 +67,8 @@ export default function SinglePost({ post, showComments }: { post: Post; showCom
                         <AccordionPanel>
                             {allComments.map((comment) => {
                                 return (
-                                    <Box key={comment.id} margin={"20px"} padding="10px">
-                                        <SinglePost post={comment} showComments={false} />
+                                    <Box key={comment.id} padding="10px 0">
+                                        <SinglePost post={comment} />
                                     </Box>
                                 );
                             })}

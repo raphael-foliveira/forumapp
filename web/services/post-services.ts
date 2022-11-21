@@ -16,3 +16,7 @@ export const createPost = async (
 ) => {
     return Fetcher.post("/posts", postInfo, authToken);
 };
+
+export const getPostVoteCount = async (postId: string) => {
+    return Fetcher.get(`/posts/${postId}/votes`);
+};

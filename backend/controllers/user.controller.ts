@@ -11,7 +11,7 @@ export const getUserHandler = async (req: Request, res: Response) => {
         where: {
             id: req.params.userId,
         },
-        relations: ["posts"],
+        relations: ["posts", "votes"],
         select: {
             id: true,
             username: true,

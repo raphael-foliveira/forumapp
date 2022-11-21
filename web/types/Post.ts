@@ -1,4 +1,5 @@
 import User from "./User";
+import Vote from "./Vote";
 
 type Post = {
     id: string;
@@ -7,6 +8,7 @@ type Post = {
     parent: Post;
     children: Post[];
     createdAt: string;
+    votes: Vote[];
 };
 
 export default Post;
