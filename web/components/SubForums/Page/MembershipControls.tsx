@@ -19,7 +19,7 @@ export default function MemberShipControls({ subForum }: { subForum: SubForum })
             userId: authData.userId,
         };
 
-        Fetcher.post(`/subforums/${subForum.id}/members`, relationShipData, authData.token);
+        Fetcher.post(`/members`, relationShipData, authData.token);
         setIsMember(true);
     };
     useEffect(() => {

@@ -6,6 +6,8 @@ import threadRouter from "./routes/thread.routes";
 import subForumRouter from "./routes/subforum.routes";
 import authRouter from "./routes/auth.routes";
 import postRouter from "./routes/post.routes";
+import voteRouter from "./routes/vote.routes";
+import memberRouter from "./routes/member.routes";
 
 const port = process.env.APP_PORT || 8000;
 
@@ -19,6 +21,8 @@ app.use("/threads", threadRouter);
 app.use("/subforums", subForumRouter);
 app.use("/auth", authRouter);
 app.use("/posts", postRouter);
+app.use("/votes", voteRouter)
+app.use("/members", memberRouter)
 
 dataSource.initialize().then(() => {
     console.log("Db Running");

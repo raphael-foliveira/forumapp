@@ -4,7 +4,7 @@ import { AuthenticatedRequest } from "../middleware/auth.middleware";
 import Post from "../entities/post.entity";
 import SubForum from "../entities/subforum.entity";
 
-export const getAllThreadsHandler = async (req: Request, res: Response) => {
+export const getThreadsHandler = async (req: Request, res: Response) => {
     const allThreads = await Thread.objects.find({
         relations: ["post"],
     });
@@ -31,14 +31,14 @@ export const getThread = async (req: Request, res: Response) => {
 };
 
 export const createThreadHandler = async (req: AuthenticatedRequest, res: Response) => {
-    if (!req.params.name || !req.body.postId || !req.user) {
+    if (!req.query.subForumName || !req.body.postId || !req.user) {
         res.sendStatus(400);
         return;
     }
 
     const subForum = await SubForum.objects.findOne({
         where: {
-            name: req.params.name,
+            name: req.query.subForumName as string,
         },
     });
 

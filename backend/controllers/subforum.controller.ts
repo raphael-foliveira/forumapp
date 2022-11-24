@@ -30,8 +30,11 @@ export const getSubForumHandler = async (req: Request, res: Response) => {
     }
 };
 
-export const getAllSubForumsHandler = async (req: Request, res: Response) => {
+export const getSubForumsHandler = async (req: Request, res: Response) => {
     const allSubForums = await SubForum.objects.find({
+        where: {
+            name: req.query.name as string
+        },
         order: {
             createdAt: "DESC",
         },
@@ -49,23 +52,6 @@ export const updateSubForumHandler = async (req: Request, res: Response) => {
         return;
     }
     res.status(200).json(subForum);
-};
-
-export const addMemberHandler = async (req: AuthenticatedRequest, res: Response) => {
-    try {
-        const response = await dataSource
-            .createQueryBuilder()
-            .insert()
-            .into("sub_forum_members_user")
-            .values(req.body)
-            .execute();
-        console.log(response);
-
-        res.status(200).json(response);
-    } catch (e) {
-        console.log(e);
-        res.status(500).json(e);
-    }
 };
 
 export const deleteMemberHandler = async (req: AuthenticatedRequest, res: Response) => {

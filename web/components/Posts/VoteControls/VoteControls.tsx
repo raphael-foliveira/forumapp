@@ -3,7 +3,7 @@ import { ArrowDownIcon, ArrowUpIcon } from "@chakra-ui/icons";
 import { Box, Button, Flex, Text } from "@chakra-ui/react";
 import { MouseEvent, useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import { getPostVoteCount } from "../../../services/post-services";
+import { getPostVotes } from "../../../services/vote-services";
 import { deleteVote, upsertVote } from "../../../services/vote-services";
 import { RootState } from "../../../store/store";
 import Post from "../../../types/Post";
@@ -56,8 +56,7 @@ export default function VoteControls({ post }: { post: Post }) {
     };
 
     useEffect(() => {
-        getPostVoteCount(post.id).then((votes) => {
-
+        getPostVotes(post.id).then((votes) => {
             for (let vote of votes) {
                 setVoteCount(voteCount + vote.value);
 

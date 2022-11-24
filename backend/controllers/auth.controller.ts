@@ -31,8 +31,9 @@ export const logInHandler = async (req: Request, res: Response) => {
         return;
     }
     console.log("Authentication failed");
-
-    res.sendStatus(404);
+    res.status(404).json({
+        error: "Credenciais inválidas."
+    });
 };
 
 export const checkToken = async (req: Request, res: Response) => {

@@ -1,13 +1,11 @@
 "use client";
 import { Box, Button, FormControl, FormLabel, Input, Text, Textarea } from "@chakra-ui/react";
 import { useRouter } from "next/navigation";
-import { Router } from "next/router";
 import { ChangeEvent, FormEvent, useState } from "react";
 import { useSelector } from "react-redux";
 import { createPost } from "../../../services/post-services";
 import { RootState } from "../../../store/store";
 import Fetcher from "../../../tools/Fetcher";
-import Post from "../../../types/Post";
 
 export default function CreateThreadForm({ subForumName }: { subForumName: string }) {
     const [formState, setFormState] = useState<ThreadFormState>({
@@ -58,7 +56,7 @@ export default function CreateThreadForm({ subForumName }: { subForumName: strin
             formData.append("threadImage", formState.threadImage);
         }
         const newThread = await Fetcher.postFormData(
-            `/threads/${subForumName}`,
+            `/threads?subForumName=${subForumName}`,
             formData,
             authData.token
         );

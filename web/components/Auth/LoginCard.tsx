@@ -1,5 +1,14 @@
 "use client";
-import { Button, Card, Flex, FormControl, FormLabel, Input, Text } from "@chakra-ui/react";
+import {
+    Button,
+    Card,
+    Flex,
+    FormControl,
+    FormLabel,
+    Input,
+    Text,
+    FormErrorMessage,
+} from "@chakra-ui/react";
 import styled from "@emotion/styled";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -24,6 +33,7 @@ export default function LoginCard() {
     });
     const router = useRouter();
     const dispatch = useDispatch();
+    const [credentialsInvalid, setCredentialsInvalid] = useState(false);
 
     const changeHandler = (event: ChangeEvent<HTMLInputElement>) => {
         setFormState((prevState) => ({ ...prevState, [event.target.name]: event.target.value }));
@@ -49,9 +59,10 @@ export default function LoginCard() {
             if (data.token) {
                 localStorage.setItem("token", data.token);
                 dispatch(authorize({ token: data.token, userId: data.userId }));
-
                 router.push("/");
+                return;
             }
+            setCredentialsInvalid(true);
         });
     };
 
@@ -60,23 +71,26 @@ export default function LoginCard() {
             <Text as="h3">Login</Text>
             <form action="" onSubmit={submitHandler}>
                 <Flex padding={4} gap={5} wrap="wrap">
-                    <FormControl isInvalid={formState.userNameInvalid}>
-                        <FormLabel>User name</FormLabel>
-                        <Input
-                            type={"text"}
-                            name="username"
-                            value={formState.username}
-                            onChange={changeHandler}
-                        />
-                    </FormControl>
-                    <FormControl isInvalid={formState.passwordInvalid}>
-                        <FormLabel>Password</FormLabel>
-                        <Input
-                            type={"password"}
-                            name="password"
-                            value={formState.password}
-                            onChange={changeHandler}
-                        />
+                    <FormControl isInvalid={credentialsInvalid}>
+                        <FormControl isInvalid={formState.userNameInvalid}>
+                            <FormLabel>User name</FormLabel>
+                            <Input
+                                type={"text"}
+                                name="username"
+                                value={formState.username}
+                                onChange={changeHandler}
+                            />
+                        </FormControl>
+                        <FormControl isInvalid={formState.passwordInvalid}>
+                            <FormLabel>Password</FormLabel>
+                            <Input
+                                type={"password"}
+                                name="password"
+                                value={formState.password}
+                                onChange={changeHandler}
+                            />
+                        </FormControl>
+                        <FormErrorMessage>Credenciais inválidas</FormErrorMessage>
                     </FormControl>
                     <Button type="submit" onClick={validateForm}>
                         Login
