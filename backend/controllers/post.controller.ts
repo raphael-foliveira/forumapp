@@ -1,6 +1,5 @@
 import { Request, Response } from "express";
 import Post from "../entities/post.entity";
-import User from "../entities/user.entity";
 import Vote from "../entities/vote.entity";
 import { AuthenticatedRequest } from "../middleware/auth.middleware";
 

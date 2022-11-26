@@ -1,12 +1,11 @@
 "use client";
+import { Avatar, Flex, Skeleton } from "@chakra-ui/react";
 import Link from "next/link";
-import { Box, Flex, Skeleton, Spinner, Avatar } from "@chakra-ui/react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { RootState } from "../store/store";
-import { deauthorize } from "../store/auth/authSlice";
-import { userAgent } from "next/server";
-import { use, useEffect, useState } from "react";
 import { getUser } from "../services/auth-services";
+import { deauthorize } from "../store/auth/authSlice";
+import { RootState } from "../store/store";
 
 export default function NavBar() {
     const authData = useSelector((state: RootState) => state.auth);

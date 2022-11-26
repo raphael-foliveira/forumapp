@@ -1,10 +1,7 @@
-import express, { Request } from "express";
-import fs from "fs";
+import express from "express";
 import multer from "multer";
 import {
-    createThreadHandler,
-    getThreadsHandler,
-    getThread
+    createThreadHandler, getThread, getThreadsHandler
 } from "../controllers/thread.controller";
 import { verifyToken } from "../middleware/auth.middleware";
 

@@ -1,11 +1,7 @@
 import express from "express";
 import multer from "multer";
 import {
-    createSubForumHandler,
-    deleteMemberHandler,
-    getSubForumsHandler,
-    getSubForumHandler,
-    updateSubForumHandler
+    createSubForumHandler, getSubForumHandler, getSubForumsHandler, updateSubForumHandler
 } from "../controllers/subforum.controller";
 import { verifyToken } from "../middleware/auth.middleware";
 

@@ -1,4 +1,4 @@
-import { Entity, Column, OneToOne, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 import { dataSource } from "../db/data-source";
 import User from "./user.entity";
 import Vote from "./vote.entity";

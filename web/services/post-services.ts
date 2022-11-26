@@ -1,6 +1,5 @@
 import Fetcher from "../tools/Fetcher";
 import Post from "../types/Post";
-import Thread from "../types/Thread";
 
 export const getAllPosts = async (): Promise<Post[]> => {
     return Fetcher.get("/threads");

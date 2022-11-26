@@ -1,11 +1,10 @@
-import { Text, Card, Image, Box, Flex } from "@chakra-ui/react";
-import { use, useEffect, useState } from "react";
+import { Box, Card, Flex, Image, Text } from "@chakra-ui/react";
+import { useEffect, useState } from "react";
 import { getPost } from "../../services/post-services";
 import { getThread } from "../../services/thread-services";
 import { parseDate } from "../../tools/parseDate";
 import Post from "../../types/Post";
 import Thread from "../../types/Thread";
-import SinglePost from "../Posts/SinglePost";
 
 export default function ThreadCard({ threadId }: { threadId: string }) {
     const [thread, setThread] = useState<Thread>();

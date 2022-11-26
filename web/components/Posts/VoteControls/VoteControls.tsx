@@ -3,11 +3,9 @@ import { ArrowDownIcon, ArrowUpIcon } from "@chakra-ui/icons";
 import { Box, Button, Flex, Text } from "@chakra-ui/react";
 import { MouseEvent, useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import { getPostVotes } from "../../../services/vote-services";
-import { deleteVote, upsertVote } from "../../../services/vote-services";
+import { deleteVote, getPostVotes, upsertVote } from "../../../services/vote-services";
 import { RootState } from "../../../store/store";
 import Post from "../../../types/Post";
-import Vote from "../../../types/Vote";
 
 export default function VoteControls({ post }: { post: Post }) {
     const [voteCount, setVoteCount] = useState<number>(0);

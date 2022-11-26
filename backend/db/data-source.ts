@@ -1,5 +1,7 @@
 import { DataSource } from "typeorm";
-require("dotenv").config();
+import dotenv from "dotenv";
+
+dotenv.config();
 
 const envDbPort = process.env.DATABASE_PORT;
 let databasePort;

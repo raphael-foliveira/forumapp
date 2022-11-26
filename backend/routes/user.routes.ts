@@ -1,11 +1,8 @@
-import express, { Request } from "express";
-import fs from "fs";
-import {
-    getAllUsersHandler,
-    createUserHandler,
-    getUserHandler,
-} from "../controllers/user.controller";
+import express from "express";
 import multer from "multer";
+import {
+    createUserHandler, getAllUsersHandler, getUserHandler
+} from "../controllers/user.controller";
 
 const upload = multer({dest: "./static/users"});
 

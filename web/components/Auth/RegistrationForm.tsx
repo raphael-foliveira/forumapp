@@ -1,20 +1,11 @@
 "use client";
 import {
-    Input,
-    Box,
-    Flex,
-    Text,
-    InputGroup,
-    FormControl,
-    FormLabel,
-    Wrap,
-    Button,
-    Image,
+    Button, Flex, FormControl,
+    FormLabel, Image, Input, Text, Wrap
 } from "@chakra-ui/react";
 import { useRouter } from "next/navigation";
 import { ChangeEvent, FormEvent, useEffect, useState } from "react";
 import Fetcher from "../../tools/Fetcher";
-import User from "../../types/User";
 
 export default function RegistrationForm() {
     const [formState, setFormState] = useState<RegisterForm>(registerFormInitialState);
