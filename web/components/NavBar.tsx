@@ -3,7 +3,7 @@ import { Avatar, Flex, Skeleton } from "@chakra-ui/react";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { getUser } from "../services/auth-services";
+import { getUser, logoutUser } from "../services/auth-services";
 import { deauthorize } from "../store/auth/authSlice";
 import { RootState } from "../store/store";
 
@@ -17,10 +17,16 @@ export default function NavBar() {
         if (authData.isAuthenticated) {
             getUser(authData.userId).then((userData) => {
                 setAvatarSrc(userData.profilePicture);
-                setUsername(userData.username)
+                setUsername(userData.username);
             });
         }
     }, [authData]);
+
+    const handleLogout = () => {
+        logoutUser(authData.token, authData.userId);
+        dispatch(deauthorize());
+        localStorage.setItem("token", "");
+    };
 
     return (
         <Skeleton isLoaded={!authData.loading}>
@@ -37,13 +43,7 @@ export default function NavBar() {
                 >
                     {authData.isAuthenticated ? (
                         <>
-                            <Link
-                                href="#"
-                                onClick={() => {
-                                    dispatch(deauthorize());
-                                    localStorage.setItem("token", "");
-                                }}
-                            >
+                            <Link href="#" onClick={handleLogout}>
                                 {username}
                             </Link>
                             <Avatar src={`${process.env.NEXT_PUBLIC_API_URL}/${avatarSrc}`} />

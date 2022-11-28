@@ -6,10 +6,14 @@ interface PayloadWithUserInfo extends JwtPayload {
     email: string;
 }
 
-export const getUserFromToken = async (token: string) => {
-    const decodedToken = jwt.verify(token, process.env.JWT_SECRET as Secret) as PayloadWithUserInfo;
-    console.log("Authenticating user...");
+export const getUserFromToken = async (token: string): Promise<User | null> => {
     try {
+        const decodedToken = jwt.verify(
+            token,
+            process.env.JWT_SECRET as Secret
+        ) as PayloadWithUserInfo;
+
+        console.log("Authenticating user...");
 
         const authenticatedUser = await User.objects.findOne({
             where: {
@@ -22,8 +26,13 @@ export const getUserFromToken = async (token: string) => {
                 profilePicture: true,
             },
         });
+        if (!authenticatedUser) {
+            console.log("Authentication failed.");
+            return null;
+        }
         return authenticatedUser;
-    } catch (e) {
-        return null
+    } catch {
+        console.log("Token expired");
+        return null;
     }
 };

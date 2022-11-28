@@ -1,4 +1,5 @@
 import { NextFunction, Request, Response } from "express";
+import InvalidToken from "../entities/invalidToken.entity";
 import User from "../entities/user.entity";
 import { getUserFromToken } from "../services/token.service";
 
@@ -16,10 +17,24 @@ export const verifyToken = async (req: AuthenticatedRequest, res: Response, next
     }
     const bearer = bearerHeader;
     const bearerToken = bearer.split(" ")[1];
+
+    const invalidToken = await InvalidToken.objects.findOne({
+        where: {
+            token: bearerToken,
+        },
+    });
+
+    if (invalidToken) {
+        res.status(403).json({
+            json: "This token is invalid.",
+        });
+        return;
+    }
+
     const authenticatedUser = await getUserFromToken(bearerToken);
     if (!authenticatedUser) {
         res.status(403).json({
-            message: "Invalid Token"
+            message: "Invalid Token",
         });
         return;
     }
