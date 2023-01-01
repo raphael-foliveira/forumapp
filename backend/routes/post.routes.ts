@@ -1,13 +1,10 @@
 import express from "express";
-import {
-    createPostHandler,
-    getPostHandler,
-} from "../controllers/post.controller";
+import PostController from "../controllers/post.controller";
 import { verifyToken } from "../middleware/auth.middleware";
 
 const postRouter = express.Router();
 
-postRouter.get("/:id", getPostHandler);
-postRouter.post("/", verifyToken, createPostHandler);
+postRouter.get("/:id", PostController.getPostHandler);
+postRouter.post("/", verifyToken, PostController.createPostHandler);
 
 export default postRouter;

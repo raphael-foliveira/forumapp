@@ -1,17 +1,16 @@
 import express from "express";
 import multer from "multer";
-import {
-    createThreadHandler, getThread, getThreadsHandler
-} from "../controllers/thread.controller";
+import ThreadController from "../controllers/thread.controller";
 import { verifyToken } from "../middleware/auth.middleware";
 
-const upload = multer({dest: "./static/threads"});
+const upload = multer({ dest: "./static/threads" });
 
 const threadRouter = express.Router();
 
-threadRouter.get("/", getThreadsHandler);
-threadRouter.post("/", verifyToken, upload.single("threadImage"), createThreadHandler);
+threadRouter.route("/")
+	.get(ThreadController.getThreadsHandler)
+	.post(verifyToken, upload.single("threadImage"), ThreadController.createThreadHandler);
 
-threadRouter.get("/:id", getThread);
+threadRouter.get("/:id", ThreadController.getThread);
 
 export default threadRouter;

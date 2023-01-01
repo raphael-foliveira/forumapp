@@ -1,8 +1,8 @@
-import { addMemberHandler } from "../controllers/member.controller";
+import MemberController from "../controllers/member.controller";
 import express from "express";
 
 const memberRouter = express.Router();
 
-memberRouter.post("/", addMemberHandler);
+memberRouter.post("/", MemberController.addMemberHandler);
 
 export default memberRouter;

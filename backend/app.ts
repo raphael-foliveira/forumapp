@@ -21,12 +21,12 @@ app.use("/threads", threadRouter);
 app.use("/subforums", subForumRouter);
 app.use("/auth", authRouter);
 app.use("/posts", postRouter);
-app.use("/votes", voteRouter)
-app.use("/members", memberRouter)
+app.use("/votes", voteRouter);
+app.use("/members", memberRouter);
 
 dataSource.initialize().then(() => {
-    console.log("Db Running");
-    app.listen(port, () => {
-        console.log(`Server running on port ${port}`);
-    });
+	console.log("Db Running");
+	app.listen(port, () => {
+		console.log(`Server running on port ${port}`);
+	});
 });
