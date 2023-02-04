@@ -14,22 +14,30 @@ export default {
 	},
 
 	async getThread(req: Request, res: Response) {
-		const singleThread = await Thread.objects.findOne({
-			where: {
-				id: req.params.id,
-			},
-			relations: ["post"],
-		});
-		if (!singleThread) {
-			console.log(`Thread ${req.params.id} not found`);
-
-			res.sendStatus(404);
-			return;
+		try {
+			const singleThread = await Thread.objects.findOne({
+				where: {
+					id: req.params.id,
+				},
+				relations: ["post"],
+			});
+			if (!singleThread) {
+				console.log(`Thread ${req.params.id} not found`);
+	
+				res.sendStatus(404);
+				return;
+			}
+			console.log("Found thread:");
+			console.log(singleThread);
+			res.status(200).json(singleThread);
+		} catch (exception) {
+			console.log(exception)
+			res.status(400).json({
+				"error": "bad uuid"
+			})
 		}
-		console.log("Found thread:");
-		console.log(singleThread);
+			
 
-		res.status(200).json(singleThread);
 	},
 
 	async createThreadHandler(req: AuthenticatedRequest, res: Response) {

@@ -93,12 +93,12 @@ export default function LoginCard() {
 						<FormErrorMessage>Credenciais inválidas</FormErrorMessage>
 					</FormControl>
 					<Button type="submit" onClick={validateForm}>
-                        Login
+						Login
 					</Button>
 
 					<BlueLinks>
 						<Text as="p" fontSize={"12px"} textAlign="end">
-                            or <Link href="/register">Register</Link>
+							or <Link href="/register">Register</Link>
 						</Text>
 					</BlueLinks>
 				</Flex>

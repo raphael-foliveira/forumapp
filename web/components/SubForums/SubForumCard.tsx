@@ -10,7 +10,7 @@ const PointerDiv = styled.div`
     }
 `;
 
-export default function SubForumCard({ subForum }: { subForum: SubForum }) {
+export default function SubForumCard({ subForum }: { subForum: SubForum; }) {
 	const router = useRouter();
 	return (
 		<PointerDiv>
