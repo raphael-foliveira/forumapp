@@ -6,14 +6,16 @@ import { parseDate } from "../../tools/parseDate";
 import Post from "../../types/Post";
 import Thread from "../../types/Thread";
 
-export default function ThreadCard({ threadId }: { threadId: string }) {
+export default function ThreadCard({ threadId }: { threadId: string; }) {
 	const [thread, setThread] = useState<Thread>();
 	const [post, setPost] = useState<Post>();
 
 	useEffect(() => {
 		getThread(threadId).then((threadInfo: Thread) => {
+			console.log("got the thread");
 			setThread(threadInfo);
 			getPost(threadInfo.post.id).then((postInfo: Post) => {
+				console.log("got the post");
 				setPost(postInfo);
 			});
 		});

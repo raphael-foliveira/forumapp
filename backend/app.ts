@@ -25,8 +25,8 @@ app.use("/votes", voteRouter);
 app.use("/members", memberRouter);
 
 dataSource.initialize().then(() => {
-	console.log("Db Running");
-	app.listen(port, () => {
-		console.log(`Server running on port ${port}`);
-	});
+  console.log("Db Running");
+  app.listen(port, () => {
+    console.log(`Server running on port ${port}`);
+  });
 });
