@@ -7,24 +7,28 @@ import { getAllSubForums } from "../services/subforums-services";
 import SubForum from "../types/SubForum";
 
 export default function Home() {
-	const [isHidden, setIsHidden] = useState<boolean>(true);
-	const [allSubs, setAllSubs] = useState<SubForum[]>([]);
+    const [isHidden, setIsHidden] = useState<boolean>(true);
+    const [allSubs, setAllSubs] = useState<SubForum[]>([]);
 
-	useEffect(() => {
-		getAllSubForums().then((subForums) => {
-			setAllSubs(subForums);
-		});
-	}, []);
+    useEffect(() => {
+        getAllSubForums().then((subForums) => {
+            setAllSubs(subForums);
+        });
+    }, []);
 
-	const toggleHiddenForm = () => {
-		setIsHidden(!isHidden);
-	};
+    const toggleHiddenForm = () => {
+        setIsHidden(!isHidden);
+    };
 
-	return (
-		<>
-			<Button onClick={toggleHiddenForm}>Create Sub</Button>
-			<CreateSubForumForm isHidden={isHidden} allSubs={allSubs} setAllSubs={setAllSubs} />
-			<SubForumsList allSubs={allSubs} />
-		</>
-	);
+    return (
+        <>
+            <Button onClick={toggleHiddenForm}>Create Sub</Button>
+            <CreateSubForumForm
+                isHidden={isHidden}
+                allSubs={allSubs}
+                setAllSubs={setAllSubs}
+            />
+            <SubForumsList allSubs={allSubs} />
+        </>
+    );
 }
