@@ -1,24 +1,24 @@
-import { DataSource } from "typeorm";
-import dotenv from "dotenv";
+import { DataSource } from 'typeorm';
+import dotenv from 'dotenv';
 
 dotenv.config();
 
-const envDbPort = process.env.DATABASE_PORT;
-let databasePort;
-
-if (typeof envDbPort !== "undefined") {
-    databasePort = parseInt(envDbPort);
-} else {
-    databasePort = 5432
-}
+const {
+  DATABASE_HOST,
+  DATABASE_TYPE,
+  DATABASE_NAME,
+  DATABASE_USERNAME,
+  DATABASE_PASSWORD,
+  DATABASE_PORT,
+} = process.env;
 
 export const dataSource = new DataSource({
-    type: process.env.DATABASE_TYPE as "postgres" | "mysql" | "mongodb",
-    host: process.env.DATABASE_HOST,
-    port: databasePort,
-    username: process.env.DATABASE_USERNAME,
-    password: process.env.DATABASE_PASSWORD,
-    database: process.env.DATABASE_NAME,
-    entities: ["./entities/*.entity.ts"],
-    synchronize: true,
+  type: DATABASE_TYPE as 'postgres' | 'mysql' | 'mongodb',
+  host: DATABASE_HOST,
+  port: parseInt(DATABASE_PORT || '5432'),
+  username: DATABASE_USERNAME,
+  password: DATABASE_PASSWORD,
+  database: DATABASE_NAME,
+  entities: ['./entities/*.entity.ts'],
+  synchronize: true,
 });
