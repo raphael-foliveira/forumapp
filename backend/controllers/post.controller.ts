@@ -7,13 +7,6 @@ export const createPostHandler = async (
   req: AuthenticatedRequest,
   res: Response,
 ): Promise<Post | void> => {
-  if (!req.user) {
-    res.status(403).json({
-      error: 'Not authenticated.',
-    });
-    return;
-  }
-
   try {
     const newPostData = postRepository.create({
       author: req.user,

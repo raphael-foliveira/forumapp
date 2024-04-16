@@ -1,15 +1,19 @@
 import { NextFunction, Request, RequestHandler, Response } from 'express';
-import InvalidToken from '../entities/invalidToken.entity';
 import User from '../entities/user.entity';
 import { getUserFromToken } from '../services/token.service';
 import { z } from 'zod';
+import { invalidTokenRepository } from '../entities/invalidToken.entity';
 
-export interface AuthenticatedRequest extends Request {
+export interface AuthenticatingRequest extends Request {
   user?: User;
 }
 
+export interface AuthenticatedRequest extends Request {
+  user: User;
+}
+
 export const verifyToken = async (
-  req: AuthenticatedRequest,
+  req: AuthenticatingRequest,
   res: Response,
   next: NextFunction,
 ) => {
@@ -23,7 +27,7 @@ export const verifyToken = async (
   const bearer = bearerHeader;
   const bearerToken = bearer.split(' ')[1];
 
-  const invalidToken = await InvalidToken.objects.findOne({
+  const invalidToken = await invalidTokenRepository.findOne({
     where: {
       token: bearerToken,
     },

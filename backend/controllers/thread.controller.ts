@@ -1,6 +1,6 @@
 import { threadRepository } from '../entities/thread.entity';
 import { Request, Response } from 'express';
-import { AuthenticatedRequest } from '../middleware/auth.middleware';
+import { AuthenticatingRequest } from '../middleware/auth.middleware';
 import { postRepository } from '../entities/post.entity';
 import { subforumRepository } from '../entities/subforum.entity';
 
@@ -37,7 +37,7 @@ export const getThread = async (req: Request, res: Response) => {
 };
 
 export const createThreadHandler = async (
-  req: AuthenticatedRequest,
+  req: AuthenticatingRequest,
   res: Response,
 ) => {
   if (!req.query.subForumName || !req.body.postId || !req.user) {

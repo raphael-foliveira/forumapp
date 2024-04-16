@@ -1,7 +1,10 @@
 import { Request, Response } from 'express';
 import { dataSource } from '../db/data-source';
 import { subforumRepository } from '../entities/subforum.entity';
-import { AuthenticatedRequest } from '../middleware/auth.middleware';
+import {
+  AuthenticatedRequest,
+  AuthenticatingRequest,
+} from '../middleware/auth.middleware';
 
 export const getSubForumHandler = async (req: Request, res: Response) => {
   console.log(`Searching for ${req.params.name} Sub...`);
@@ -48,7 +51,7 @@ export const updateSubForumHandler = async (req: Request, res: Response) => {
 };
 
 export const deleteMemberHandler = async (
-  req: AuthenticatedRequest,
+  req: AuthenticatingRequest,
   res: Response,
 ) => {
   try {
@@ -75,10 +78,6 @@ export const createSubForumHandler = async (
   req: AuthenticatedRequest,
   res: Response,
 ) => {
-  if (!req.body.name || !req.body.description || !req.user) {
-    res.sendStatus(400);
-    return;
-  }
   const subForumData = {
     admin: req.user,
     name: req.body.name,

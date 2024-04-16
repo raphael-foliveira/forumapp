@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import { voteRepository } from '../entities/vote.entity';
-import { AuthenticatedRequest } from '../middleware/auth.middleware';
+import { AuthenticatingRequest } from '../middleware/auth.middleware';
 
 export const getVotesHandler = async (req: Request, res: Response) => {
   const votes = await voteRepository.find({
@@ -28,7 +28,7 @@ export const getVoteHandler = async (req: Request, res: Response) => {
 };
 
 export const deleteVoteHandler = async (
-  req: AuthenticatedRequest,
+  req: AuthenticatingRequest,
   res: Response,
 ) => {
   if (!req.user) {
@@ -64,7 +64,7 @@ export const deleteVoteHandler = async (
 };
 
 export const upsertVoteHandler = async (
-  req: AuthenticatedRequest,
+  req: AuthenticatingRequest,
   res: Response,
 ) => {
   if (!req.user) {
