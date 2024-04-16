@@ -16,6 +16,7 @@ export const errorHandlingMiddleware: ErrorRequestHandler = (
   res,
   _,
 ) => {
+  console.log({ err });
   if (err instanceof ZodError) {
     return res.status(400).json(err.issues);
   }

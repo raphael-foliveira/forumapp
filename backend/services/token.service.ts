@@ -2,7 +2,6 @@ import jwt, { JwtPayload } from 'jsonwebtoken';
 import { Request } from 'express';
 import User, { userRepository } from '../entities/user.entity';
 import { HttpError } from '../middleware/error-handling.middleware';
-import { invalidTokenRepository } from '../entities/invalidToken.entity';
 import { environment } from '../config/environment';
 
 export interface UserJwtPayload extends JwtPayload {
@@ -11,8 +10,15 @@ export interface UserJwtPayload extends JwtPayload {
   username: string;
 }
 
-export const verifyToken = (token: string): UserJwtPayload => {
-  return jwt.verify(token, environment.jwt.secret) as UserJwtPayload;
+export const verifyToken = (token?: string): UserJwtPayload => {
+  if (!token) {
+    throw new HttpError(401, 'Missing token');
+  }
+  try {
+    return jwt.verify(token, environment.jwt.secret) as UserJwtPayload;
+  } catch {
+    throw new HttpError(401, 'Token malformed');
+  }
 };
 
 export const signToken = (payload: UserJwtPayload, expiresIn = '120h') => {
@@ -42,6 +48,7 @@ export const getUserFromToken = async (token: string): Promise<User> => {
 
   return authenticatedUser;
 };
+
 export const extractTokenFromHeader = async ({
   headers,
 }: Request): Promise<string> => {
@@ -59,17 +66,13 @@ export const extractTokenFromHeader = async ({
     throw new HttpError(401, 'Malformed Token');
   }
 
-  const invalidToken = await invalidTokenRepository.findOne({
-    where: {
-      token,
-    },
-  });
-
-  if (invalidToken) {
-    throw new HttpError(401, 'Invalid Token');
-  }
-
   return token;
+};
+
+export const verifyAuthToken = async (req: Request) => {
+  const token = await extractTokenFromHeader(req);
+  const userData = verifyToken(token);
+  return { token, userData };
 };
 
 export const getUserFromRequest = async (req: Request) => {

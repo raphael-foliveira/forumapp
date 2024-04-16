@@ -38,6 +38,9 @@ export default class User {
 
   @OneToMany(() => Vote, (vote) => vote.user)
   votes: Vote[];
+
+  @Column({ unique: true })
+  token?: string;
 }
 
 export const userRepository = dataSource.getRepository(User);
