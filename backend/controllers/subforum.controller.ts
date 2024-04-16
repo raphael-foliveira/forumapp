@@ -2,10 +2,9 @@ import { Request, Response } from 'express';
 import { dataSource } from '../db/data-source';
 import { subforumRepository } from '../entities/subforum.entity';
 import { HttpError } from '../middleware/error-handling.middleware';
-import { getUserFromRequest } from '../services/token.service';
+import { getUserFromRequest, UserJwtPayload } from '../services/token.service';
 
 export const getSubForumHandler = async (req: Request, res: Response) => {
-  console.log(`Searching for ${req.params.name} Sub...`);
   const subForum = await subforumRepository.findOne({
     where: {
       name: req.params.name,
@@ -54,8 +53,11 @@ export const deleteMemberHandler = async (req: Request, res: Response) => {
   res.status(200).json(response);
 };
 
-export const createSubForumHandler = async (req: Request, res: Response) => {
-  const user = await getUserFromRequest(req);
+export const createSubForumHandler = async (
+  req: Request,
+  res: Response,
+  user: UserJwtPayload,
+) => {
   const subForumData = {
     admin: user,
     name: req.body.name,

@@ -1,6 +1,10 @@
 import { NextFunction, Request, RequestHandler, Response } from 'express';
 import { z } from 'zod';
-import { extractTokenFromHeader } from '../services/token.service';
+import {
+  extractTokenFromHeader,
+  getUserFromRequest,
+  UserJwtPayload,
+} from '../services/token.service';
 
 export const verifyToken = async (
   req: Request,
@@ -32,4 +36,13 @@ export const validateCheckTokenBody: RequestHandler = (req, _, next) => {
 
   req.body = checkTokenSchema.parse(req.body);
   next();
+};
+
+export const authenticated = (
+  fn: (req: Request, res: Response, user: UserJwtPayload) => void,
+): RequestHandler => {
+  return async (req, res) => {
+    const user = await getUserFromRequest(req);
+    return fn(req, res, user);
+  };
 };

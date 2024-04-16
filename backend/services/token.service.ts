@@ -4,7 +4,7 @@ import User, { userRepository } from '../entities/user.entity';
 import { HttpError } from '../middleware/error-handling.middleware';
 import { invalidTokenRepository } from '../entities/invalidToken.entity';
 
-interface UserJwtPayload extends JwtPayload {
+export interface UserJwtPayload extends JwtPayload {
   id: string;
   email: string;
 }
@@ -14,7 +14,6 @@ export const verifyToken = (token: string): UserJwtPayload => {
 };
 
 export const getUserFromToken = async (token: string): Promise<User> => {
-  console.log('Authenticating user...');
   const decodedToken = verifyToken(token);
 
   const authenticatedUser = await userRepository.findOne({

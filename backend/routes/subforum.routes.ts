@@ -1,6 +1,6 @@
 import express from 'express';
 import multer from 'multer';
-import { verifyToken } from '../middleware/auth.middleware';
+import { verifyToken, authenticated } from '../middleware/auth.middleware';
 import { subforumController } from '../controllers';
 
 const upload = multer({ dest: './static/subforums' });
@@ -13,7 +13,7 @@ subForumRouter
   .post(
     verifyToken,
     upload.single('image'),
-    subforumController.createSubForumHandler,
+    authenticated(subforumController.createSubForumHandler),
   );
 
 subForumRouter.get('/:name', subforumController.getSubForumHandler);
@@ -26,8 +26,7 @@ subForumRouter.put(
 
 subForumRouter.delete(
   '/:id/:memberid',
-  verifyToken,
-  subforumController.deleteMemberHandler,
+  authenticated(subforumController.deleteMemberHandler),
 );
 
 export default subForumRouter;

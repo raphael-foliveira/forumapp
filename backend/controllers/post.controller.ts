@@ -2,13 +2,13 @@ import { Request, Response } from 'express';
 import Post, { postRepository } from '../entities/post.entity';
 import { voteRepository } from '../entities/vote.entity';
 import { HttpError } from '../middleware/error-handling.middleware';
-import { getUserFromRequest } from '../services/token.service';
+import { UserJwtPayload } from '../services/token.service';
 
 export const createPostHandler = async (
   req: Request,
   res: Response,
+  user: UserJwtPayload,
 ): Promise<Post | void> => {
-  const user = await getUserFromRequest(req);
   const newPostData = postRepository.create({
     author: user,
     parent: req.body.parent,
