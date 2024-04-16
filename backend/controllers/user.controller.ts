@@ -1,5 +1,6 @@
 import { Request, Response } from 'express';
 import { userRepository } from '../entities/user.entity';
+import { HttpError } from '../middleware/error-handling.middleware';
 
 export const getAllUsersHandler = async (_: Request, res: Response) => {
   const allUsers = await userRepository.find();
@@ -20,30 +21,19 @@ export const getUserHandler = async (req: Request, res: Response) => {
     },
   });
   if (!user) {
-    res.sendStatus(404);
-    return;
+    throw new HttpError(404, 'User not found');
   }
   res.status(200).json(user);
 };
 
 export const createUserHandler = async (req: Request, res: Response) => {
   const newUserData = req.body;
-  try {
-    const newUser = userRepository.create({
-      email: newUserData.email,
-      username: newUserData.username,
-      password: newUserData.password,
-      profilePicture: req.file?.path || '',
-    });
-    const result = await userRepository.save(newUser);
-    if (!result) {
-      res.sendStatus(400);
-      return;
-    }
-    res.status(201).json(result);
-  } catch (e) {
-    res.status(400).json({
-      error: 'Username or Email already exists.',
-    });
-  }
+  const newUser = userRepository.create({
+    email: newUserData.email,
+    username: newUserData.username,
+    password: newUserData.password,
+    profilePicture: req.file?.path || '',
+  });
+  const result = await userRepository.save(newUser);
+  res.status(201).json(result);
 };

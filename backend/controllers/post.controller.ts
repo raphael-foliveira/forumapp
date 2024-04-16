@@ -1,23 +1,21 @@
 import { Request, Response } from 'express';
 import Post, { postRepository } from '../entities/post.entity';
 import { voteRepository } from '../entities/vote.entity';
-import { AuthenticatedRequest } from '../middleware/auth.middleware';
+import { HttpError } from '../middleware/error-handling.middleware';
+import { getUserFromRequest } from '../services/token.service';
 
 export const createPostHandler = async (
-  req: AuthenticatedRequest,
+  req: Request,
   res: Response,
 ): Promise<Post | void> => {
-  try {
-    const newPostData = postRepository.create({
-      author: req.user,
-      parent: req.body.parent,
-      content: req.body.content,
-    });
-    const newPost = await postRepository.save(newPostData);
-    res.status(201).json(newPost);
-  } catch (e) {
-    res.status(500).json(e);
-  }
+  const user = await getUserFromRequest(req);
+  const newPostData = postRepository.create({
+    author: user,
+    parent: req.body.parent,
+    content: req.body.content,
+  });
+  const newPost = await postRepository.save(newPostData);
+  res.status(201).json(newPost);
 };
 
 export const getPostHandler = async (req: Request, res: Response) => {
@@ -28,12 +26,8 @@ export const getPostHandler = async (req: Request, res: Response) => {
     relations: ['children', 'parent', 'author', 'votes'],
   });
   if (!post) {
-    console.log('Post not found.');
-    res.sendStatus(404);
-    return;
+    throw new HttpError(404, 'Post not found');
   }
-  console.log('Found Post:');
-  console.log(post);
 
   res.status(200).json(post);
 };
@@ -47,8 +41,6 @@ export const getPostVotesHandler = async (req: Request, res: Response) => {
     },
     relations: ['user', 'post'],
   });
-  console.log('Found Votes');
-  console.log(votes);
 
   res.status(200).json(votes);
 };

@@ -1,10 +1,9 @@
 import { Request, Response } from 'express';
 import { dataSource } from '../db/data-source';
 import { subforumRepository } from '../entities/subforum.entity';
-import {
-  AuthenticatedRequest,
-  AuthenticatingRequest,
-} from '../middleware/auth.middleware';
+import { AuthenticatingRequest } from '../middleware/auth.middleware';
+import { HttpError } from '../middleware/error-handling.middleware';
+import { getUserFromRequest } from '../services/token.service';
 
 export const getSubForumHandler = async (req: Request, res: Response) => {
   console.log(`Searching for ${req.params.name} Sub...`);
@@ -15,13 +14,8 @@ export const getSubForumHandler = async (req: Request, res: Response) => {
     relations: ['members', 'threads', 'admin'],
   });
   if (!subForum) {
-    console.log('Sub not found');
-
-    res.sendStatus(404);
-    return;
+    throw new HttpError(404, 'SubForum not found');
   }
-  console.log('Found Sub:');
-  console.log(subForum);
 
   res.status(200).json(subForum);
 };
@@ -42,10 +36,7 @@ export const getSubForumsHandler = async (req: Request, res: Response) => {
 export const updateSubForumHandler = async (req: Request, res: Response) => {
   const subForum = await subforumRepository.update(req.body.id, req.body);
   if (!subForum) {
-    res.status(400).json({
-      message: 'SubForum does not exist.',
-    });
-    return;
+    throw new HttpError(404, 'SubForum does not exist');
   }
   res.status(200).json(subForum);
 };
@@ -54,46 +45,34 @@ export const deleteMemberHandler = async (
   req: AuthenticatingRequest,
   res: Response,
 ) => {
-  try {
-    const response = await dataSource
-      .createQueryBuilder()
-      .delete()
-      .from('sub_forum_members_user')
-      .where({
-        subForumId: req.params.id,
-        userId: req.params.memberid,
-      })
-      .execute();
-    console.log(response);
+  const response = await dataSource
+    .createQueryBuilder()
+    .delete()
+    .from('sub_forum_members_user')
+    .where({
+      subForumId: req.params.id,
+      userId: req.params.memberid,
+    })
+    .execute();
 
-    res.status(200);
-  } catch (e) {
-    console.log(e);
-
-    res.status(500).json(e);
-  }
+  res.status(200).json(response);
 };
 
-export const createSubForumHandler = async (
-  req: AuthenticatedRequest,
-  res: Response,
-) => {
+export const createSubForumHandler = async (req: Request, res: Response) => {
+  const user = await getUserFromRequest(req);
   const subForumData = {
-    admin: req.user,
+    admin: user,
     name: req.body.name,
     description: req.body.description,
     image: req.file?.path || '',
-    members: [req.user],
+    members: [user],
   };
 
   const subForumObject = subforumRepository.create(subForumData);
   const newSubForum = await subforumRepository.save(subForumObject);
 
   if (!newSubForum) {
-    res.status(400).json({
-      message: 'SubForum could not be created.',
-    });
-    return;
+    throw new HttpError(400, 'Subforum could not be created');
   }
   res.status(201).json(newSubForum);
 };

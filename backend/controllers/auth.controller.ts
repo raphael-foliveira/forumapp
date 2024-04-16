@@ -3,12 +3,13 @@ import { userRepository } from '../entities/user.entity';
 import jwt, { Secret } from 'jsonwebtoken';
 import { getUserFromToken } from '../services/token.service';
 import { invalidTokenRepository } from '../entities/invalidToken.entity';
+import { HttpError } from '../middleware/error-handling.middleware';
 
-export const logInHandler = async (req: Request, res: Response) => {
-  console.log('Loggin user in...');
+export const logInHandler = async ({ body }: Request, res: Response) => {
+  const { password, username } = body;
   const user = await userRepository.findOne({
     where: {
-      username: req.body.username,
+      username,
     },
     select: {
       id: true,
@@ -16,27 +17,24 @@ export const logInHandler = async (req: Request, res: Response) => {
       password: true,
     },
   });
-  if (user && user.password === req.body.password) {
-    console.log(`Correct password for user ${user.username}`);
 
-    const token = jwt.sign(
-      {
-        username: req.body.username,
-        id: user.id,
-        email: user.email,
-      },
-      process.env.JWT_SECRET as Secret,
-      { expiresIn: '120h' },
-    );
-    res
-      .status(201)
-      .json({ token: token, username: user.username, userId: user.id });
-    return;
+  if (!user || user.password !== password) {
+    throw new HttpError(400, 'Credenciais inválidas');
   }
-  console.log('Authentication failed');
-  res.status(404).json({
-    error: 'Credenciais inválidas.',
-  });
+
+  const token = jwt.sign(
+    {
+      username: body.username,
+      id: user.id,
+      email: user.email,
+    },
+    process.env.JWT_SECRET as Secret,
+    { expiresIn: '120h' },
+  );
+  res
+    .status(201)
+    .json({ token: token, username: user.username, userId: user.id });
+  return;
 };
 
 export const logOutHandler = async (req: Request, res: Response) => {
@@ -50,26 +48,11 @@ export const logOutHandler = async (req: Request, res: Response) => {
   });
 
   const savedInvalidToken = await invalidTokenRepository.save(newInvalidToken);
-  if (!savedInvalidToken) {
-    res.status(500).json({
-      error: 'Something went wrong.',
-    });
-    return;
-  }
-
-  console.log('Token invalidated');
-  console.log(savedInvalidToken);
 
   res.status(201).json(savedInvalidToken);
 };
 
 export const checkToken = async (req: Request, res: Response) => {
   const user = await getUserFromToken(req.body.token);
-  if (!user) {
-    res.sendStatus(404);
-    return;
-  }
-  console.log('Authenticated from token:');
-  console.log(user);
   res.status(200).json(user);
 };

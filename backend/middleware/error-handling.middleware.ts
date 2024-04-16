@@ -1,5 +1,6 @@
-import { Request, Response, NextFunction } from 'express';
+import { ErrorRequestHandler } from 'express';
 import { ZodError } from 'zod';
+
 export class HttpError extends Error {
   constructor(
     public status: number,
@@ -8,15 +9,17 @@ export class HttpError extends Error {
     super(message);
   }
 }
-export const errorHandlingMiddleware = (
-  err: Error,
-  _req: Request,
-  res: Response,
-  _next: NextFunction,
+
+export const errorHandlingMiddleware: ErrorRequestHandler = (
+  err,
+  _req,
+  res,
+  _,
 ) => {
   if (err instanceof ZodError) {
     return res.status(400).json(err.issues);
   }
+
   if (err instanceof HttpError) {
     return res
       .status(err.status)

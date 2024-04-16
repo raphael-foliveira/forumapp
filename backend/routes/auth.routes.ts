@@ -4,7 +4,7 @@ import { authController } from '../controllers';
 
 const authRouter = express.Router();
 
-authRouter.post('/login', authController.logInHandler);
+authRouter.post('/login', verifyToken, authController.logInHandler);
 authRouter.post('/logout', verifyToken, authController.logOutHandler);
 authRouter.post('/verify-token', authController.checkToken);
 

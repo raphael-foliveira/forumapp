@@ -1,8 +1,8 @@
 import { threadRepository } from '../entities/thread.entity';
 import { Request, Response } from 'express';
-import { AuthenticatingRequest } from '../middleware/auth.middleware';
 import { postRepository } from '../entities/post.entity';
 import { subforumRepository } from '../entities/subforum.entity';
+import { HttpError } from '../middleware/error-handling.middleware';
 
 export const getThreadsHandler = async (_: Request, res: Response) => {
   const allThreads = await threadRepository.find({
@@ -12,39 +12,21 @@ export const getThreadsHandler = async (_: Request, res: Response) => {
 };
 
 export const getThread = async (req: Request, res: Response) => {
-  try {
-    const singleThread = await threadRepository.findOne({
-      where: {
-        id: req.params.id,
-      },
-      relations: ['post'],
-    });
-    if (!singleThread) {
-      console.log(`Thread ${req.params.id} not found`);
+  const singleThread = await threadRepository.findOne({
+    where: {
+      id: req.params.id,
+    },
+    relations: ['post'],
+  });
 
-      res.sendStatus(404);
-      return;
-    }
-    console.log('Found thread:');
-    console.log(singleThread);
-    res.status(200).json(singleThread);
-  } catch (exception) {
-    console.log(exception);
-    res.status(400).json({
-      error: 'bad uuid',
-    });
+  if (!singleThread) {
+    throw new HttpError(404, 'Thread not found');
   }
+
+  res.status(200).json(singleThread);
 };
 
-export const createThreadHandler = async (
-  req: AuthenticatingRequest,
-  res: Response,
-) => {
-  if (!req.query.subForumName || !req.body.postId || !req.user) {
-    res.sendStatus(400);
-    return;
-  }
-
+export const createThreadHandler = async (req: Request, res: Response) => {
   const subForum = await subforumRepository.findOne({
     where: {
       name: req.query.subForumName as string,
@@ -52,10 +34,7 @@ export const createThreadHandler = async (
   });
 
   if (!subForum) {
-    res.status(400).json({
-      message: 'SubForum does not exist.',
-    });
-    return;
+    throw new HttpError(404, 'SubForum not found');
   }
 
   const post = await postRepository.findOne({
@@ -65,10 +44,7 @@ export const createThreadHandler = async (
   });
 
   if (!post) {
-    res.status(404).json({
-      error: 'Post not found',
-    });
-    return;
+    throw new HttpError(404, 'Post not found');
   }
 
   const threadData = {
@@ -79,11 +55,7 @@ export const createThreadHandler = async (
     post: post,
   };
 
-  try {
-    const threadObject = threadRepository.create(threadData);
-    const newThread = await threadRepository.save(threadObject);
-    res.status(201).json(newThread);
-  } catch (e) {
-    res.status(400).json(e);
-  }
+  const threadObject = threadRepository.create(threadData);
+  const newThread = await threadRepository.save(threadObject);
+  res.status(201).json(newThread);
 };

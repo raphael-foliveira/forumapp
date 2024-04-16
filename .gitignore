@@ -1,6 +1,5 @@
 .env
 node_modules
-.eslintrc.json
 .next
 .env.local
 package-lock.json

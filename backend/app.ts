@@ -8,6 +8,7 @@ import postRouter from './routes/post.routes';
 import voteRouter from './routes/vote.routes';
 import memberRouter from './routes/member.routes';
 import { cors } from './middleware/cors.middleware';
+import { errorHandlingMiddleware } from './middleware/error-handling.middleware';
 
 const port = process.env.APP_PORT || 8000;
 
@@ -23,6 +24,7 @@ app.use('/auth', authRouter);
 app.use('/posts', postRouter);
 app.use('/votes', voteRouter);
 app.use('/members', memberRouter);
+app.use(errorHandlingMiddleware);
 
 const run = async () => {
   await dataSource.initialize();
