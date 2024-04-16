@@ -11,7 +11,7 @@ export interface AuthenticatedRequest extends Request {
 export const verifyToken = async (
   req: AuthenticatedRequest,
   res: Response,
-  next: NextFunction
+  next: NextFunction,
 ) => {
   const bearerHeader = req.headers.authorization;
   if (typeof bearerHeader === 'undefined') {
@@ -49,8 +49,8 @@ export const verifyToken = async (
 
 export const validateLogoutBody = (
   req: Request,
-  res: Response,
-  next: NextFunction
+  _: Response,
+  next: NextFunction,
 ) => {
   const logoutSchema = z.object({
     token: z.string(),
@@ -61,7 +61,7 @@ export const validateLogoutBody = (
   next();
 };
 
-export const validateCheckTokenBody: RequestHandler = (req, res, next) => {
+export const validateCheckTokenBody: RequestHandler = (req, _, next) => {
   const checkTokenSchema = z.object({
     token: z.string(),
   });

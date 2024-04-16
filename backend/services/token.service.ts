@@ -1,5 +1,5 @@
-import jwt, { JwtPayload, Secret } from "jsonwebtoken";
-import User from "../entities/user.entity";
+import jwt, { JwtPayload, Secret } from 'jsonwebtoken';
+import User from '../entities/user.entity';
 
 interface PayloadWithUserInfo extends JwtPayload {
     id: string;
@@ -7,32 +7,32 @@ interface PayloadWithUserInfo extends JwtPayload {
 }
 
 export const getUserFromToken = async (token: string): Promise<User | null> => {
-    try {
-        const decodedToken = jwt.verify(
-            token,
+	try {
+		const decodedToken = jwt.verify(
+			token,
             process.env.JWT_SECRET as Secret
-        ) as PayloadWithUserInfo;
+		) as PayloadWithUserInfo;
 
-        console.log("Authenticating user...");
+		console.log('Authenticating user...');
 
-        const authenticatedUser = await User.objects.findOne({
-            where: {
-                id: decodedToken.id,
-            },
-            select: {
-                id: true,
-                username: true,
-                email: true,
-                profilePicture: true,
-            },
-        });
-        if (!authenticatedUser) {
-            console.log("Authentication failed.");
-            return null;
-        }
-        return authenticatedUser;
-    } catch {
-        console.log("Token expired");
-        return null;
-    }
+		const authenticatedUser = await User.objects.findOne({
+			where: {
+				id: decodedToken.id,
+			},
+			select: {
+				id: true,
+				username: true,
+				email: true,
+				profilePicture: true,
+			},
+		});
+		if (!authenticatedUser) {
+			console.log('Authentication failed.');
+			return null;
+		}
+		return authenticatedUser;
+	} catch {
+		console.log('Token expired');
+		return null;
+	}
 };

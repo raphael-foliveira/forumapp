@@ -5,7 +5,8 @@
   "license": "MIT",
   "scripts": {
     "typeorm": "typeorm-ts-node-commonjs",
-    "dev": "nodemon app.ts"
+    "dev": "nodemon app.ts",
+    "lint": "eslint . --fix --ext .ts"
   },
   "dependencies": {
     "dotenv": "^16.0.3",

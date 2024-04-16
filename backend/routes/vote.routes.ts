@@ -1,12 +1,12 @@
-import express from "express";
-import VoteController from "../controllers/vote.controller";
-import { verifyToken } from "../middleware/auth.middleware";
+import express from 'express';
+import { verifyToken } from '../middleware/auth.middleware';
+import { voteController } from '../controllers';
 
 const voteRouter = express.Router();
 
-voteRouter.get("/", VoteController.getVotesHandler);
-voteRouter.get("/:id", VoteController.getVoteHandler);
-voteRouter.delete("/", verifyToken, VoteController.deleteVoteHandler);
-voteRouter.put("/", verifyToken, VoteController.upsertVoteHandler);
+voteRouter.get('/', voteController.getVotesHandler);
+voteRouter.get('/:id', voteController.getVoteHandler);
+voteRouter.delete('/', verifyToken, voteController.deleteVoteHandler);
+voteRouter.put('/', verifyToken, voteController.upsertVoteHandler);
 
 export default voteRouter;

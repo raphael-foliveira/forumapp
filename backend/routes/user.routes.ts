@@ -1,15 +1,16 @@
-import express from "express";
-import multer from "multer";
-import UserController from "../controllers/user.controller";
+import express from 'express';
+import multer from 'multer';
+import { userController } from '../controllers';
 
-const upload = multer({ dest: "./static/users" });
+const upload = multer({ dest: './static/users' });
 
 const usersRouter = express.Router();
 
-usersRouter.route("/")
-	.get(UserController.getAllUsersHandler)
-	.post(upload.single("profilePicture"), UserController.createUserHandler);
+usersRouter
+  .route('/')
+  .get(userController.getAllUsersHandler)
+  .post(upload.single('profilePicture'), userController.createUserHandler);
 
-usersRouter.get("/:userId", UserController.getUserHandler);
+usersRouter.get('/:userId', userController.getUserHandler);
 
 export default usersRouter;
