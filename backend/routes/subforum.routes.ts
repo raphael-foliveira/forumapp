@@ -9,23 +9,20 @@ const subForumRouter = express.Router();
 
 subForumRouter
   .route('/')
-  .get(subforumController.getSubForumsHandler)
+  .get(subforumController.getSubForums)
   .post(
     verifyToken,
     upload.single('image'),
-    authenticated(subforumController.createSubForumHandler),
+    authenticated(subforumController.createSubForum),
   );
 
-subForumRouter.get('/:name', subforumController.getSubForumHandler);
+subForumRouter.get('/:name', subforumController.getSubForum);
 
-subForumRouter.put(
-  '/:id',
-  authenticated(subforumController.updateSubForumHandler),
-);
+subForumRouter.put('/:id', authenticated(subforumController.updateSubForum));
 
 subForumRouter.delete(
   '/:id/:memberid',
-  authenticated(subforumController.deleteMemberHandler),
+  authenticated(subforumController.deleteMember),
 );
 
 export default subForumRouter;

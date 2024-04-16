@@ -7,10 +7,10 @@ export const getAllUsers: RequestHandler = async (_, res) => {
   return res.status(200).json(allUsers);
 };
 
-export const getUser: RequestHandler = async (req, res) => {
+export const getUser: RequestHandler = async ({ params }, res) => {
   const user = await userRepository.findOne({
     where: {
-      id: req.params.userId,
+      id: params.userId,
     },
     relations: ['posts', 'votes'],
     select: {
@@ -27,11 +27,10 @@ export const getUser: RequestHandler = async (req, res) => {
 };
 
 export const createUser: RequestHandler = async (req, res) => {
-  const newUserData = req.body;
   const newUser = userRepository.create({
-    email: newUserData.email,
-    username: newUserData.username,
-    password: newUserData.password,
+    email: req.body.email,
+    username: req.body.username,
+    password: req.body.password,
     profilePicture: req.file?.path || '',
   });
   const result = await userRepository.save(newUser);

@@ -4,7 +4,7 @@ import { postController } from '../controllers';
 
 const postRouter = express.Router();
 
-postRouter.get('/:id', postController.getPostHandler);
-postRouter.post('/', authenticated(postController.createPostHandler));
+postRouter.get('/:id', postController.getPost);
+postRouter.post('/', authenticated(postController.createPost));
 
 export default postRouter;

@@ -4,9 +4,9 @@ import { voteController } from '../controllers';
 
 const voteRouter = express.Router();
 
-voteRouter.get('/', voteController.getVotesHandler);
-voteRouter.get('/:id', voteController.getVoteHandler);
-voteRouter.delete('/', authenticated(voteController.deleteVoteHandler));
-voteRouter.put('/', authenticated(voteController.upsertVoteHandler));
+voteRouter.get('/', voteController.getVotes);
+voteRouter.get('/:id', voteController.getVote);
+voteRouter.delete('/', authenticated(voteController.deleteVote));
+voteRouter.put('/', authenticated(voteController.upsertVote));
 
 export default voteRouter;

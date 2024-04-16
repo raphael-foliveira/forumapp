@@ -1,9 +1,9 @@
 import { NextFunction, Request, RequestHandler, Response } from 'express';
 import { z } from 'zod';
+import { AuthenticatedRequestHandler } from '../controllers/post.controller';
 import {
   extractTokenFromHeader,
   getUserFromRequest,
-  UserJwtPayload,
 } from '../services/token.service';
 
 export const verifyToken = async (
@@ -39,7 +39,7 @@ export const validateCheckTokenBody: RequestHandler = (req, _, next) => {
 };
 
 export const authenticated = (
-  fn: (req: Request, res: Response, user: UserJwtPayload) => void,
+  fn: AuthenticatedRequestHandler,
 ): RequestHandler => {
   return async (req, res) => {
     const user = await getUserFromRequest(req);

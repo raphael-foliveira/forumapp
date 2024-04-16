@@ -1,9 +1,9 @@
 import { RequestHandler } from 'express';
 import { userRepository } from '../entities/user.entity';
-import jwt, { Secret } from 'jsonwebtoken';
 import { getUserFromToken } from '../services/token.service';
 import { invalidTokenRepository } from '../entities/invalidToken.entity';
 import { HttpError } from '../middleware/error-handling.middleware';
+import { tokenService } from '../services';
 
 export const logIn: RequestHandler = async ({ body }, res) => {
   const { password, username } = body;
@@ -22,22 +22,19 @@ export const logIn: RequestHandler = async ({ body }, res) => {
     throw new HttpError(400, 'Credenciais inválidas');
   }
 
-  const token = jwt.sign(
-    {
-      username: body.username,
-      id: user.id,
-      email: user.email,
-    },
-    process.env.JWT_SECRET as Secret,
-    { expiresIn: '120h' },
-  );
+  const token = tokenService.signToken({
+    id: user.id,
+    username: user.username,
+    email: user.email,
+  });
+
   return res
     .status(201)
     .json({ token: token, username: user.username, userId: user.id });
 };
 
-export const logOut: RequestHandler = async (req, res) => {
-  const { token, userId } = req.body;
+export const logOut: RequestHandler = async ({ body }, res) => {
+  const { token, userId } = body;
 
   const newInvalidToken = invalidTokenRepository.create({
     owner: {
@@ -51,7 +48,7 @@ export const logOut: RequestHandler = async (req, res) => {
   return res.status(201).json(savedInvalidToken);
 };
 
-export const checkToken: RequestHandler = async (req, res) => {
-  const user = await getUserFromToken(req.body.token);
+export const checkToken: RequestHandler = async ({ body }, res) => {
+  const user = await getUserFromToken(body.token);
   return res.status(200).json(user);
 };

@@ -9,11 +9,11 @@ const threadRouter = express.Router();
 
 threadRouter
   .route('/')
-  .get(threadController.getThreadsHandler)
+  .get(threadController.getThreads)
   .post(
     verifyToken,
     upload.single('threadImage'),
-    threadController.createThreadHandler,
+    threadController.createThread,
   );
 
 threadRouter.get('/:id', threadController.getThread);

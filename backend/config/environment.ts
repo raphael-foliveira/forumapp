@@ -1,4 +1,5 @@
 import dotenv from 'dotenv';
+import { Secret } from 'jsonwebtoken';
 
 dotenv.config();
 
@@ -8,6 +9,7 @@ const {
   DATABASE_USERNAME,
   DATABASE_PASSWORD,
   DATABASE_PORT,
+  JWT_SECRET,
 } = process.env;
 
 export const getDatabasePort = () => {
@@ -28,6 +30,9 @@ export const environment = {
     user: DATABASE_USERNAME,
     password: DATABASE_PASSWORD,
     port: getDatabasePort(),
+  },
+  jwt: {
+    secret: JWT_SECRET as Secret,
   },
 };
 

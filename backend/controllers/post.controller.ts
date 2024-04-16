@@ -1,27 +1,26 @@
-import { Request, RequestHandler, Response } from 'express';
+import { RequestHandler, Response } from 'express';
 import Post, { postRepository } from '../entities/post.entity';
 import { voteRepository } from '../entities/vote.entity';
 import { HttpError } from '../middleware/error-handling.middleware';
-import { UserJwtPayload } from '../services/token.service';
+import { AuthenticatedRequestHandler } from '../types/request';
 
-export const createPost = async (
-  req: Request,
-  res: Response,
-  user: UserJwtPayload,
+export const createPost: AuthenticatedRequestHandler = async (
+  { body },
+  res,
+  user,
 ): Promise<Response<Post | void>> => {
-  const newPostData = postRepository.create({
+  const newPost = await postRepository.save({
     author: user,
-    parent: req.body.parent,
-    content: req.body.content,
+    parent: body.parent,
+    content: body.content,
   });
-  const newPost = await postRepository.save(newPostData);
   return res.status(201).json(newPost);
 };
 
-export const getPost: RequestHandler = async (req, res) => {
+export const getPost: RequestHandler = async ({ params }, res) => {
   const post = await postRepository.findOne({
     where: {
-      id: req.params.id,
+      id: params.id,
     },
     relations: ['children', 'parent', 'author', 'votes'],
   });
@@ -32,11 +31,11 @@ export const getPost: RequestHandler = async (req, res) => {
   return res.status(200).json(post);
 };
 
-export const getPostVotes: RequestHandler = async (req, res) => {
+export const getPostVotes: RequestHandler = async ({ params }, res) => {
   const votes = await voteRepository.find({
     where: {
       post: {
-        id: req.params.id,
+        id: params.id,
       },
     },
     relations: ['user', 'post'],

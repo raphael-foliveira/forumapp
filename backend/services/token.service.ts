@@ -1,16 +1,24 @@
-import jwt, { JwtPayload, Secret } from 'jsonwebtoken';
+import jwt, { JwtPayload } from 'jsonwebtoken';
 import { Request } from 'express';
 import User, { userRepository } from '../entities/user.entity';
 import { HttpError } from '../middleware/error-handling.middleware';
 import { invalidTokenRepository } from '../entities/invalidToken.entity';
+import { environment } from '../config/environment';
 
 export interface UserJwtPayload extends JwtPayload {
   id: string;
   email: string;
+  username: string;
 }
 
 export const verifyToken = (token: string): UserJwtPayload => {
-  return jwt.verify(token, process.env.JWT_SECRET as Secret) as UserJwtPayload;
+  return jwt.verify(token, environment.jwt.secret) as UserJwtPayload;
+};
+
+export const signToken = (payload: UserJwtPayload, expiresIn = '120h') => {
+  return jwt.sign(payload, environment.jwt.secret, {
+    expiresIn,
+  });
 };
 
 export const getUserFromToken = async (token: string): Promise<User> => {

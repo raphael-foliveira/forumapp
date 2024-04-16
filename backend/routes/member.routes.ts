@@ -3,6 +3,6 @@ import { memberController } from '../controllers';
 
 const memberRouter = express.Router();
 
-memberRouter.post('/', memberController.addMemberHandler);
+memberRouter.post('/', memberController.addMember);
 
 export default memberRouter;
