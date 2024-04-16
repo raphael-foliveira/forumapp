@@ -2,7 +2,7 @@ import { Request, Response } from 'express';
 import { dataSource } from '../db/data-source';
 import { subforumRepository } from '../entities/subforum.entity';
 import { HttpError } from '../middleware/error-handling.middleware';
-import { getUserFromRequest, UserJwtPayload } from '../services/token.service';
+import { UserJwtPayload } from '../services/token.service';
 
 export const getSubForumHandler = async (req: Request, res: Response) => {
   const subForum = await subforumRepository.findOne({

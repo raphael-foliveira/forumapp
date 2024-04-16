@@ -20,8 +20,7 @@ subForumRouter.get('/:name', subforumController.getSubForumHandler);
 
 subForumRouter.put(
   '/:id',
-  verifyToken,
-  subforumController.updateSubForumHandler,
+  authenticated(subforumController.updateSubForumHandler),
 );
 
 subForumRouter.delete(
