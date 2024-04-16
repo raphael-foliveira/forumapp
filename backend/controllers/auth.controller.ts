@@ -19,7 +19,7 @@ export const logIn: RequestHandler = async ({ body }, res) => {
   });
 
   if (!user || user.password !== password) {
-    throw new HttpError(400, 'Credenciais inválidas');
+    throw new HttpError(401, 'Credenciais inválidas');
   }
 
   const token = tokenService.signToken({
@@ -29,7 +29,7 @@ export const logIn: RequestHandler = async ({ body }, res) => {
   });
 
   return res
-    .status(201)
+    .status(200)
     .json({ token: token, username: user.username, userId: user.id });
 };
 

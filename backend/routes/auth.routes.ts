@@ -5,8 +5,8 @@ import { useHandler, useHandlers } from './use-handler';
 
 const authRouter = express.Router();
 
-authRouter.post('/login', ...useHandlers(verifyToken, authController.logIn));
-authRouter.post('/logout', ...useHandlers(verifyToken, authController.logOut));
+authRouter.post('/login', useHandlers(authController.logIn));
+authRouter.post('/logout', useHandlers(verifyToken, authController.logOut));
 authRouter.post('/verify-token', useHandler(authController.checkToken));
 
 export default authRouter;

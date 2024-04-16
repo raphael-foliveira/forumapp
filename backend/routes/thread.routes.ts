@@ -12,7 +12,7 @@ threadRouter
   .route('/')
   .get(threadController.getThreads)
   .post(
-    ...useHandlers(
+    useHandlers(
       verifyToken,
       upload.single('threadImage'),
       threadController.createThread,

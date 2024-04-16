@@ -11,7 +11,7 @@ usersRouter
   .route('/')
   .get(useHandler(userController.getAllUsers))
   .post(
-    ...useHandlers(upload.single('profilePicture'), userController.createUser),
+    useHandlers(upload.single('profilePicture'), userController.createUser),
   );
 
 usersRouter.get('/:userId', useHandler(userController.getUser));

@@ -12,7 +12,7 @@ subForumRouter
   .route('/')
   .get(subforumController.getSubForums)
   .post(
-    ...useHandlers(
+    useHandlers(
       verifyToken,
       upload.single('image'),
       authenticated(subforumController.createSubForum),
