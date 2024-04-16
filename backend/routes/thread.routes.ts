@@ -2,7 +2,7 @@ import express from 'express';
 import multer from 'multer';
 import { verifyToken } from '../middleware/auth.middleware';
 import { threadController } from '../controllers';
-import { useHandler } from './use-handler';
+import { useHandler, useHandlers } from './use-handler';
 
 const upload = multer({ dest: './static/threads' });
 
@@ -12,9 +12,11 @@ threadRouter
   .route('/')
   .get(threadController.getThreads)
   .post(
-    useHandler(verifyToken),
-    useHandler(upload.single('threadImage')),
-    useHandler(threadController.createThread),
+    ...useHandlers(
+      verifyToken,
+      upload.single('threadImage'),
+      threadController.createThread,
+    ),
   );
 
 threadRouter.get('/:id', useHandler(threadController.getThread));

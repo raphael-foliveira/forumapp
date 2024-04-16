@@ -5,3 +5,7 @@ export const useHandler =
   (req, res, next) => {
     return Promise.resolve(fn(req, res, next)).catch(next);
   };
+
+export const useHandlers = (...handlers: RequestHandler[]) => {
+  return handlers.map(useHandler);
+};

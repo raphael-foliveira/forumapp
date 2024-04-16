@@ -2,7 +2,7 @@ import express from 'express';
 import multer from 'multer';
 import { verifyToken, authenticated } from '../middleware/auth.middleware';
 import { subforumController } from '../controllers';
-import { useHandler } from './use-handler';
+import { useHandler, useHandlers } from './use-handler';
 
 const upload = multer({ dest: './static/subforums' });
 
@@ -12,9 +12,11 @@ subForumRouter
   .route('/')
   .get(subforumController.getSubForums)
   .post(
-    useHandler(verifyToken),
-    useHandler(upload.single('image')),
-    useHandler(authenticated(subforumController.createSubForum)),
+    ...useHandlers(
+      verifyToken,
+      upload.single('image'),
+      authenticated(subforumController.createSubForum),
+    ),
   );
 
 subForumRouter.get('/:name', useHandler(subforumController.getSubForum));
