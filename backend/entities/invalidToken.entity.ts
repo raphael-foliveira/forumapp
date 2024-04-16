@@ -1,11 +1,9 @@
 import { Entity, Column, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
-import { dataSource } from '../db/data-source';
 import User from './user.entity';
+import { dataSource } from '../db/data-source';
 
 @Entity()
 export default class InvalidToken {
-  static objects = dataSource.getRepository(InvalidToken);
-
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
@@ -15,3 +13,5 @@ export default class InvalidToken {
   @ManyToOne(() => User)
   owner: User;
 }
+
+export const invalidTokenRepository = dataSource.getRepository(InvalidToken);

@@ -1,7 +1,7 @@
-import { Request, Response } from "express";
-import Post from "../entities/post.entity";
-import Vote from "../entities/vote.entity";
-import { AuthenticatedRequest } from "../middleware/auth.middleware";
+import { Request, Response } from 'express';
+import Post, { postRepository } from '../entities/post.entity';
+import { voteRepository } from '../entities/vote.entity';
+import { AuthenticatedRequest } from '../middleware/auth.middleware';
 
 export const createPostHandler = async (
   req: AuthenticatedRequest,
@@ -9,18 +9,18 @@ export const createPostHandler = async (
 ): Promise<Post | void> => {
   if (!req.user) {
     res.status(403).json({
-      error: "Not authenticated.",
+      error: 'Not authenticated.',
     });
     return;
   }
 
   try {
-    const newPostData = Post.objects.create({
+    const newPostData = postRepository.create({
       author: req.user,
       parent: req.body.parent,
       content: req.body.content,
     });
-    const newPost = await Post.objects.save(newPostData);
+    const newPost = await postRepository.save(newPostData);
     res.status(201).json(newPost);
   } catch (e) {
     res.status(500).json(e);
@@ -28,33 +28,33 @@ export const createPostHandler = async (
 };
 
 export const getPostHandler = async (req: Request, res: Response) => {
-  const post = await Post.objects.findOne({
+  const post = await postRepository.findOne({
     where: {
       id: req.params.id,
     },
-    relations: ["children", "parent", "author", "votes"],
+    relations: ['children', 'parent', 'author', 'votes'],
   });
   if (!post) {
-    console.log("Post not found.");
+    console.log('Post not found.');
     res.sendStatus(404);
     return;
   }
-  console.log("Found Post:");
+  console.log('Found Post:');
   console.log(post);
 
   res.status(200).json(post);
 };
 
 export const getPostVotesHandler = async (req: Request, res: Response) => {
-  const votes = await Vote.objects.find({
+  const votes = await voteRepository.find({
     where: {
       post: {
         id: req.params.id,
       },
     },
-    relations: ["user", "post"],
+    relations: ['user', 'post'],
   });
-  console.log("Found Votes");
+  console.log('Found Votes');
   console.log(votes);
 
   res.status(200).json(votes);

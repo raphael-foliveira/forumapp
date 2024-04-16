@@ -12,8 +12,6 @@ import SubForum from './subforum.entity';
 
 @Entity()
 export default class Thread {
-  static objects = dataSource.getRepository(Thread);
-
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
@@ -30,3 +28,5 @@ export default class Thread {
   @ManyToOne(() => SubForum, (subForum) => subForum.threads)
   subForum: SubForum;
 }
+
+export const threadRepository = dataSource.getRepository(Thread);

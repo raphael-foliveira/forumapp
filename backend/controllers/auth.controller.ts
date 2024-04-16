@@ -1,12 +1,12 @@
 import { Request, Response } from 'express';
-import User from '../entities/user.entity';
+import { userRepository } from '../entities/user.entity';
 import jwt, { Secret } from 'jsonwebtoken';
 import { getUserFromToken } from '../services/token.service';
-import InvalidToken from '../entities/invalidToken.entity';
+import { invalidTokenRepository } from '../entities/invalidToken.entity';
 
 export const logInHandler = async (req: Request, res: Response) => {
   console.log('Loggin user in...');
-  const user = await User.objects.findOne({
+  const user = await userRepository.findOne({
     where: {
       username: req.body.username,
     },
@@ -42,14 +42,14 @@ export const logInHandler = async (req: Request, res: Response) => {
 export const logOutHandler = async (req: Request, res: Response) => {
   const { token, userId } = req.body;
 
-  const newInvalidToken = InvalidToken.objects.create({
+  const newInvalidToken = invalidTokenRepository.create({
     owner: {
       id: userId,
     },
     token,
   });
 
-  const savedInvalidToken = await InvalidToken.objects.save(newInvalidToken);
+  const savedInvalidToken = await invalidTokenRepository.save(newInvalidToken);
   if (!savedInvalidToken) {
     res.status(500).json({
       error: 'Something went wrong.',

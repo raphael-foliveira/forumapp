@@ -12,8 +12,6 @@ import Vote from './vote.entity';
 
 @Entity()
 export default class User {
-  static objects = dataSource.getRepository(User);
-
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
@@ -41,3 +39,5 @@ export default class User {
   @OneToMany(() => Vote, (vote) => vote.user)
   votes: Vote[];
 }
+
+export const userRepository = dataSource.getRepository(User);

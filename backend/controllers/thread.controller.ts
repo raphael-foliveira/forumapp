@@ -1,11 +1,11 @@
-import Thread from '../entities/thread.entity';
+import { threadRepository } from '../entities/thread.entity';
 import { Request, Response } from 'express';
 import { AuthenticatedRequest } from '../middleware/auth.middleware';
-import Post from '../entities/post.entity';
-import SubForum from '../entities/subforum.entity';
+import { postRepository } from '../entities/post.entity';
+import { subforumRepository } from '../entities/subforum.entity';
 
 export const getThreadsHandler = async (_: Request, res: Response) => {
-  const allThreads = await Thread.objects.find({
+  const allThreads = await threadRepository.find({
     relations: ['post'],
   });
   res.status(200).json(allThreads);
@@ -13,7 +13,7 @@ export const getThreadsHandler = async (_: Request, res: Response) => {
 
 export const getThread = async (req: Request, res: Response) => {
   try {
-    const singleThread = await Thread.objects.findOne({
+    const singleThread = await threadRepository.findOne({
       where: {
         id: req.params.id,
       },
@@ -45,7 +45,7 @@ export const createThreadHandler = async (
     return;
   }
 
-  const subForum = await SubForum.objects.findOne({
+  const subForum = await subforumRepository.findOne({
     where: {
       name: req.query.subForumName as string,
     },
@@ -58,7 +58,7 @@ export const createThreadHandler = async (
     return;
   }
 
-  const post = await Post.objects.findOne({
+  const post = await postRepository.findOne({
     where: {
       id: req.body.postId,
     },
@@ -80,8 +80,8 @@ export const createThreadHandler = async (
   };
 
   try {
-    const threadObject = Thread.objects.create(threadData);
-    const newThread = await Thread.objects.save(threadObject);
+    const threadObject = threadRepository.create(threadData);
+    const newThread = await threadRepository.save(threadObject);
     res.status(201).json(newThread);
   } catch (e) {
     res.status(400).json(e);

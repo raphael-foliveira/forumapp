@@ -13,8 +13,6 @@ import User from './user.entity';
 
 @Entity()
 export default class SubForum {
-  static objects = dataSource.getRepository(SubForum);
-
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
@@ -40,3 +38,5 @@ export default class SubForum {
   @JoinTable()
   members: User[];
 }
+
+export const subforumRepository = dataSource.getRepository(SubForum);
