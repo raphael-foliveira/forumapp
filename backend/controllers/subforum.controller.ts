@@ -1,7 +1,6 @@
 import { Request, Response } from 'express';
 import { dataSource } from '../db/data-source';
 import { subforumRepository } from '../entities/subforum.entity';
-import { AuthenticatingRequest } from '../middleware/auth.middleware';
 import { HttpError } from '../middleware/error-handling.middleware';
 import { getUserFromRequest } from '../services/token.service';
 
@@ -41,10 +40,7 @@ export const updateSubForumHandler = async (req: Request, res: Response) => {
   res.status(200).json(subForum);
 };
 
-export const deleteMemberHandler = async (
-  req: AuthenticatingRequest,
-  res: Response,
-) => {
+export const deleteMemberHandler = async (req: Request, res: Response) => {
   const response = await dataSource
     .createQueryBuilder()
     .delete()

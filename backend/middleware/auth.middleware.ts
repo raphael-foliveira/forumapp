@@ -1,15 +1,6 @@
 import { NextFunction, Request, RequestHandler, Response } from 'express';
-import User from '../entities/user.entity';
 import { z } from 'zod';
 import { extractTokenFromHeader } from '../services/token.service';
-
-export interface AuthenticatingRequest extends Request {
-  user?: User;
-}
-
-export interface AuthenticatedRequest extends Request {
-  user: User;
-}
 
 export const verifyToken = async (
   req: Request,

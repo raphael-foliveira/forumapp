@@ -60,6 +60,7 @@ export const upsertVoteHandler = async (req: Request, res: Response) => {
       user: true,
     },
   });
+
   if (selectedVote) {
     selectedVote.value = req.body.value as 1 | -1;
     const updatedVote = await voteRepository.save(selectedVote);
