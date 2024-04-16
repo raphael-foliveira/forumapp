@@ -8,7 +8,7 @@ export const getThreadsHandler = async (_: Request, res: Response) => {
   const allThreads = await threadRepository.find({
     relations: ['post'],
   });
-  res.status(200).json(allThreads);
+  return res.status(200).json(allThreads);
 };
 
 export const getThread = async (req: Request, res: Response) => {
@@ -23,7 +23,7 @@ export const getThread = async (req: Request, res: Response) => {
     throw new HttpError(404, 'Thread not found');
   }
 
-  res.status(200).json(singleThread);
+  return res.status(200).json(singleThread);
 };
 
 export const createThreadHandler = async (req: Request, res: Response) => {
@@ -57,5 +57,5 @@ export const createThreadHandler = async (req: Request, res: Response) => {
 
   const threadObject = threadRepository.create(threadData);
   const newThread = await threadRepository.save(threadObject);
-  res.status(201).json(newThread);
+  return res.status(201).json(newThread);
 };

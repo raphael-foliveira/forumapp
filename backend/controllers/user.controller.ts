@@ -4,7 +4,7 @@ import { HttpError } from '../middleware/error-handling.middleware';
 
 export const getAllUsersHandler = async (_: Request, res: Response) => {
   const allUsers = await userRepository.find();
-  res.status(200).json(allUsers);
+  return res.status(200).json(allUsers);
 };
 
 export const getUserHandler = async (req: Request, res: Response) => {
@@ -23,7 +23,7 @@ export const getUserHandler = async (req: Request, res: Response) => {
   if (!user) {
     throw new HttpError(404, 'User not found');
   }
-  res.status(200).json(user);
+  return res.status(200).json(user);
 };
 
 export const createUserHandler = async (req: Request, res: Response) => {
@@ -35,5 +35,5 @@ export const createUserHandler = async (req: Request, res: Response) => {
     profilePicture: req.file?.path || '',
   });
   const result = await userRepository.save(newUser);
-  res.status(201).json(result);
+  return res.status(201).json(result);
 };

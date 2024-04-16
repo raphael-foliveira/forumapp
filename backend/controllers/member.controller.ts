@@ -13,5 +13,5 @@ export const addMemberHandler = async (req: Request, res: Response) => {
     .values(req.body)
     .execute();
 
-  res.status(200).json(response);
+  return res.status(200).json(response);
 };

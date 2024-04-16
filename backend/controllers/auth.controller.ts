@@ -31,10 +31,9 @@ export const logInHandler = async ({ body }: Request, res: Response) => {
     process.env.JWT_SECRET as Secret,
     { expiresIn: '120h' },
   );
-  res
+  return res
     .status(201)
     .json({ token: token, username: user.username, userId: user.id });
-  return;
 };
 
 export const logOutHandler = async (req: Request, res: Response) => {
@@ -49,10 +48,10 @@ export const logOutHandler = async (req: Request, res: Response) => {
 
   const savedInvalidToken = await invalidTokenRepository.save(newInvalidToken);
 
-  res.status(201).json(savedInvalidToken);
+  return res.status(201).json(savedInvalidToken);
 };
 
 export const checkToken = async (req: Request, res: Response) => {
   const user = await getUserFromToken(req.body.token);
-  res.status(200).json(user);
+  return res.status(200).json(user);
 };

@@ -8,14 +8,14 @@ export const createPostHandler = async (
   req: Request,
   res: Response,
   user: UserJwtPayload,
-): Promise<Post | void> => {
+): Promise<Response<Post | void>> => {
   const newPostData = postRepository.create({
     author: user,
     parent: req.body.parent,
     content: req.body.content,
   });
   const newPost = await postRepository.save(newPostData);
-  res.status(201).json(newPost);
+  return res.status(201).json(newPost);
 };
 
 export const getPostHandler = async (req: Request, res: Response) => {
@@ -29,7 +29,7 @@ export const getPostHandler = async (req: Request, res: Response) => {
     throw new HttpError(404, 'Post not found');
   }
 
-  res.status(200).json(post);
+  return res.status(200).json(post);
 };
 
 export const getPostVotesHandler = async (req: Request, res: Response) => {
@@ -42,5 +42,5 @@ export const getPostVotesHandler = async (req: Request, res: Response) => {
     relations: ['user', 'post'],
   });
 
-  res.status(200).json(votes);
+  return res.status(200).json(votes);
 };

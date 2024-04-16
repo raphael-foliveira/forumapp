@@ -15,7 +15,7 @@ export const getSubForumHandler = async (req: Request, res: Response) => {
     throw new HttpError(404, 'SubForum not found');
   }
 
-  res.status(200).json(subForum);
+  return res.status(200).json(subForum);
 };
 
 export const getSubForumsHandler = async (req: Request, res: Response) => {
@@ -28,7 +28,7 @@ export const getSubForumsHandler = async (req: Request, res: Response) => {
     },
     relations: ['admin', 'members', 'threads'],
   });
-  res.status(200).json(allSubForums);
+  return res.status(200).json(allSubForums);
 };
 
 export const updateSubForumHandler = async (req: Request, res: Response) => {
@@ -36,7 +36,7 @@ export const updateSubForumHandler = async (req: Request, res: Response) => {
   if (!subForum) {
     throw new HttpError(404, 'SubForum does not exist');
   }
-  res.status(200).json(subForum);
+  return res.status(200).json(subForum);
 };
 
 export const deleteMemberHandler = async (req: Request, res: Response) => {
@@ -50,7 +50,7 @@ export const deleteMemberHandler = async (req: Request, res: Response) => {
     })
     .execute();
 
-  res.status(200).json(response);
+  return res.status(200).json(response);
 };
 
 export const createSubForumHandler = async (
@@ -72,5 +72,5 @@ export const createSubForumHandler = async (
   if (!newSubForum) {
     throw new HttpError(400, 'Subforum could not be created');
   }
-  res.status(201).json(newSubForum);
+  return res.status(201).json(newSubForum);
 };

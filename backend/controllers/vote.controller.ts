@@ -14,7 +14,7 @@ export const getVotesHandler = async (req: Request, res: Response) => {
     },
     relations: ['user', 'post'],
   });
-  res.status(200).json(votes);
+  return res.status(200).json(votes);
 };
 
 export const getVoteHandler = async (req: Request, res: Response) => {
@@ -24,7 +24,7 @@ export const getVoteHandler = async (req: Request, res: Response) => {
     },
     relations: ['user', 'post'],
   });
-  res.status(200).json(vote);
+  return res.status(200).json(vote);
 };
 
 export const deleteVoteHandler = async (req: Request, res: Response) => {
@@ -42,7 +42,7 @@ export const deleteVoteHandler = async (req: Request, res: Response) => {
     throw new HttpError(404, 'Vote not found');
   }
   const result = await voteRepository.delete(vote);
-  res.status(200).json(result);
+  return res.status(200).json(result);
 };
 
 export const upsertVoteHandler = async (req: Request, res: Response) => {
@@ -64,8 +64,7 @@ export const upsertVoteHandler = async (req: Request, res: Response) => {
   if (selectedVote) {
     selectedVote.value = req.body.value as 1 | -1;
     const updatedVote = await voteRepository.save(selectedVote);
-    res.status(200).json(updatedVote);
-    return;
+    return res.status(200).json(updatedVote);
   }
 
   const newVote = voteRepository.create({
@@ -79,5 +78,5 @@ export const upsertVoteHandler = async (req: Request, res: Response) => {
   });
   const result = await voteRepository.save(newVote);
 
-  res.status(200).json(result);
+  return res.status(200).json(result);
 };
