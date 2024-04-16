@@ -10,6 +10,7 @@ const {
   DATABASE_PASSWORD,
   DATABASE_PORT,
   JWT_SECRET,
+  APP_PORT,
 } = process.env;
 
 export const getDatabasePort = () => {
@@ -33,6 +34,9 @@ export const environment = {
   },
   jwt: {
     secret: JWT_SECRET as Secret,
+  },
+  app: {
+    port: APP_PORT ?? 8000,
   },
 };
 

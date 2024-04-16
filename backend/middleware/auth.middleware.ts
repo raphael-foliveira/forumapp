@@ -1,10 +1,10 @@
 import { NextFunction, Request, RequestHandler, Response } from 'express';
 import { z } from 'zod';
-import { AuthenticatedRequestHandler } from '../controllers/post.controller';
 import {
   extractTokenFromHeader,
   getUserFromRequest,
 } from '../services/token.service';
+import { AuthenticatedRequestHandler } from '../types/request';
 
 export const verifyToken = async (
   req: Request,
