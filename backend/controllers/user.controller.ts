@@ -1,13 +1,13 @@
-import { Request, Response } from 'express';
+import { RequestHandler } from 'express';
 import { userRepository } from '../entities/user.entity';
 import { HttpError } from '../middleware/error-handling.middleware';
 
-export const getAllUsersHandler = async (_: Request, res: Response) => {
+export const getAllUsers: RequestHandler = async (_, res) => {
   const allUsers = await userRepository.find();
   return res.status(200).json(allUsers);
 };
 
-export const getUserHandler = async (req: Request, res: Response) => {
+export const getUser: RequestHandler = async (req, res) => {
   const user = await userRepository.findOne({
     where: {
       id: req.params.userId,
@@ -26,7 +26,7 @@ export const getUserHandler = async (req: Request, res: Response) => {
   return res.status(200).json(user);
 };
 
-export const createUserHandler = async (req: Request, res: Response) => {
+export const createUser: RequestHandler = async (req, res) => {
   const newUserData = req.body;
   const newUser = userRepository.create({
     email: newUserData.email,

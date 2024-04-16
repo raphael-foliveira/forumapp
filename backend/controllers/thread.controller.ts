@@ -1,17 +1,17 @@
 import { threadRepository } from '../entities/thread.entity';
-import { Request, Response } from 'express';
+import { RequestHandler } from 'express';
 import { postRepository } from '../entities/post.entity';
 import { subforumRepository } from '../entities/subforum.entity';
 import { HttpError } from '../middleware/error-handling.middleware';
 
-export const getThreadsHandler = async (_: Request, res: Response) => {
+export const getThreads: RequestHandler = async (_, res) => {
   const allThreads = await threadRepository.find({
     relations: ['post'],
   });
   return res.status(200).json(allThreads);
 };
 
-export const getThread = async (req: Request, res: Response) => {
+export const getThread: RequestHandler = async (req, res) => {
   const singleThread = await threadRepository.findOne({
     where: {
       id: req.params.id,
@@ -26,7 +26,7 @@ export const getThread = async (req: Request, res: Response) => {
   return res.status(200).json(singleThread);
 };
 
-export const createThreadHandler = async (req: Request, res: Response) => {
+export const createThread: RequestHandler = async (req, res) => {
   const subForum = await subforumRepository.findOne({
     where: {
       name: req.query.subForumName as string,

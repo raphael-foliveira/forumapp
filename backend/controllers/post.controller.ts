@@ -1,10 +1,10 @@
-import { Request, Response } from 'express';
+import { Request, RequestHandler, Response } from 'express';
 import Post, { postRepository } from '../entities/post.entity';
 import { voteRepository } from '../entities/vote.entity';
 import { HttpError } from '../middleware/error-handling.middleware';
 import { UserJwtPayload } from '../services/token.service';
 
-export const createPostHandler = async (
+export const createPost = async (
   req: Request,
   res: Response,
   user: UserJwtPayload,
@@ -18,7 +18,7 @@ export const createPostHandler = async (
   return res.status(201).json(newPost);
 };
 
-export const getPostHandler = async (req: Request, res: Response) => {
+export const getPost: RequestHandler = async (req, res) => {
   const post = await postRepository.findOne({
     where: {
       id: req.params.id,
@@ -32,7 +32,7 @@ export const getPostHandler = async (req: Request, res: Response) => {
   return res.status(200).json(post);
 };
 
-export const getPostVotesHandler = async (req: Request, res: Response) => {
+export const getPostVotes: RequestHandler = async (req, res) => {
   const votes = await voteRepository.find({
     where: {
       post: {

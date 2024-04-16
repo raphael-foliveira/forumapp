@@ -1,10 +1,10 @@
-import { Request, Response } from 'express';
+import { Request, RequestHandler, Response } from 'express';
 import { dataSource } from '../db/data-source';
 import { subforumRepository } from '../entities/subforum.entity';
 import { HttpError } from '../middleware/error-handling.middleware';
 import { UserJwtPayload } from '../services/token.service';
 
-export const getSubForumHandler = async (req: Request, res: Response) => {
+export const getSubForum: RequestHandler = async (req, res) => {
   const subForum = await subforumRepository.findOne({
     where: {
       name: req.params.name,
@@ -18,7 +18,7 @@ export const getSubForumHandler = async (req: Request, res: Response) => {
   return res.status(200).json(subForum);
 };
 
-export const getSubForumsHandler = async (req: Request, res: Response) => {
+export const getSubForums: RequestHandler = async (req, res) => {
   const allSubForums = await subforumRepository.find({
     where: {
       name: req.query.name as string,
@@ -31,7 +31,7 @@ export const getSubForumsHandler = async (req: Request, res: Response) => {
   return res.status(200).json(allSubForums);
 };
 
-export const updateSubForumHandler = async (req: Request, res: Response) => {
+export const updateSubForum: RequestHandler = async (req, res) => {
   const subForum = await subforumRepository.update(req.body.id, req.body);
   if (!subForum) {
     throw new HttpError(404, 'SubForum does not exist');
@@ -39,7 +39,7 @@ export const updateSubForumHandler = async (req: Request, res: Response) => {
   return res.status(200).json(subForum);
 };
 
-export const deleteMemberHandler = async (req: Request, res: Response) => {
+export const deleteMember: RequestHandler = async (req, res) => {
   const response = await dataSource
     .createQueryBuilder()
     .delete()
@@ -53,7 +53,7 @@ export const deleteMemberHandler = async (req: Request, res: Response) => {
   return res.status(200).json(response);
 };
 
-export const createSubForumHandler = async (
+export const createSubForum = async (
   req: Request,
   res: Response,
   user: UserJwtPayload,

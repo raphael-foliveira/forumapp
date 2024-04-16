@@ -1,8 +1,8 @@
-import { Response, Request } from 'express';
+import { RequestHandler } from 'express';
 import { dataSource } from '../db/data-source';
 import { HttpError } from '../middleware/error-handling.middleware';
 
-export const addMemberHandler = async (req: Request, res: Response) => {
+export const addMember: RequestHandler = async (req, res) => {
   if (!req.body) {
     throw new HttpError(400, 'Body is invalid');
   }

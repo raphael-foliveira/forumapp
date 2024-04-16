@@ -1,11 +1,11 @@
-import { Request, Response } from 'express';
+import { RequestHandler } from 'express';
 import { userRepository } from '../entities/user.entity';
 import jwt, { Secret } from 'jsonwebtoken';
 import { getUserFromToken } from '../services/token.service';
 import { invalidTokenRepository } from '../entities/invalidToken.entity';
 import { HttpError } from '../middleware/error-handling.middleware';
 
-export const logInHandler = async ({ body }: Request, res: Response) => {
+export const logIn: RequestHandler = async ({ body }, res) => {
   const { password, username } = body;
   const user = await userRepository.findOne({
     where: {
@@ -36,7 +36,7 @@ export const logInHandler = async ({ body }: Request, res: Response) => {
     .json({ token: token, username: user.username, userId: user.id });
 };
 
-export const logOutHandler = async (req: Request, res: Response) => {
+export const logOut: RequestHandler = async (req, res) => {
   const { token, userId } = req.body;
 
   const newInvalidToken = invalidTokenRepository.create({
@@ -51,7 +51,7 @@ export const logOutHandler = async (req: Request, res: Response) => {
   return res.status(201).json(savedInvalidToken);
 };
 
-export const checkToken = async (req: Request, res: Response) => {
+export const checkToken: RequestHandler = async (req, res) => {
   const user = await getUserFromToken(req.body.token);
   return res.status(200).json(user);
 };

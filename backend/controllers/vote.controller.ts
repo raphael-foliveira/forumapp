@@ -1,8 +1,8 @@
-import { Request, Response } from 'express';
+import { RequestHandler } from 'express';
 import { voteRepository } from '../entities/vote.entity';
 import { HttpError } from '../middleware/error-handling.middleware';
 
-export const getVotesHandler = async (req: Request, res: Response) => {
+export const getVotes: RequestHandler = async (req, res) => {
   const votes = await voteRepository.find({
     where: {
       user: {
@@ -17,7 +17,7 @@ export const getVotesHandler = async (req: Request, res: Response) => {
   return res.status(200).json(votes);
 };
 
-export const getVoteHandler = async (req: Request, res: Response) => {
+export const getVote: RequestHandler = async (req, res) => {
   const vote = await voteRepository.findOne({
     where: {
       id: req.params.id,
@@ -27,7 +27,7 @@ export const getVoteHandler = async (req: Request, res: Response) => {
   return res.status(200).json(vote);
 };
 
-export const deleteVoteHandler = async (req: Request, res: Response) => {
+export const deleteVote: RequestHandler = async (req, res) => {
   const vote = await voteRepository.findOne({
     where: {
       user: {
@@ -45,7 +45,7 @@ export const deleteVoteHandler = async (req: Request, res: Response) => {
   return res.status(200).json(result);
 };
 
-export const upsertVoteHandler = async (req: Request, res: Response) => {
+export const upsertVote: RequestHandler = async (req, res) => {
   const selectedVote = await voteRepository.findOne({
     where: {
       user: {
