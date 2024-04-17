@@ -1,69 +1,45 @@
-import { Request, Response } from "express";
-import Post from "../entities/post.entity";
-import Vote from "../entities/vote.entity";
-import { AuthenticatedRequest } from "../middleware/auth.middleware";
+import { RequestHandler, Response } from 'express';
+import Post, { postRepository } from '../entities/post.entity';
+import { voteRepository } from '../entities/vote.entity';
+import { HttpError } from '../middleware/error-handling.middleware';
+import { AuthenticatedRequestHandler } from '../types/request';
 
-export default {
-	async createPostHandler(
-		req: AuthenticatedRequest,
-		res: Response
-	): Promise<Post | void> {
-		if (!req.user) {
-			res.status(403).json({
-				error: "Not authenticated.",
-			});
-			return;
-		}
-
-		try {
-			const newPostData = Post.objects.create({
-				author: req.user,
-				parent: req.body.parent,
-				content: req.body.content,
-			});
-			const newPost = await Post.objects.save(newPostData);
-			res.status(201).json(newPost);
-		} catch (e) {
-			res.status(500).json(e);
-		}
-	},
-
-	async getPostHandler(req: Request, res: Response) {
-		const post = await Post.objects.findOne({
-			where: {
-				id: req.params.id,
-			},
-			relations: ["children", "parent", "author", "votes"],
-		});
-		if (!post) {
-			console.log("Post not found.");
-			res.sendStatus(404);
-			return;
-		}
-		console.log("Found Post:");
-		console.log(post);
-
-		res.status(200).json(post);
-	},
-
-	async getPostVotesHandler(req: Request, res: Response) {
-		const votes = await Vote.objects.find({
-			where: {
-				post: {
-					id: req.params.id,
-				},
-			},
-			relations: ["user", "post"]
-		});
-		console.log("Found Votes");
-		console.log(votes);
-
-		res.status(200).json(votes);
-	},
-
+export const createPost: AuthenticatedRequestHandler = async (
+  { body },
+  res,
+  user,
+): Promise<Response<Post | void>> => {
+  const newPost = await postRepository.save({
+    author: user,
+    parent: body.parent,
+    content: body.content,
+  });
+  return res.status(201).json(newPost);
 };
 
+export const getPost: RequestHandler = async ({ params }, res) => {
+  const post = await postRepository.findOne({
+    where: {
+      id: params.id,
+    },
+    relations: ['children', 'parent', 'author', 'votes'],
+  });
+  if (!post) {
+    throw new HttpError(404, 'Post not found');
+  }
 
+  return res.status(200).json(post);
+};
 
+export const getPostVotes: RequestHandler = async ({ params }, res) => {
+  const votes = await voteRepository.find({
+    where: {
+      post: {
+        id: params.id,
+      },
+    },
+    relations: ['user', 'post'],
+  });
 
-
+  return res.status(200).json(votes);
+};

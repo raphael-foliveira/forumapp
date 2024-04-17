@@ -1,9 +1,9 @@
 .env
 node_modules
-.eslintrc.json
 .next
 .env.local
 package-lock.json
 yarn.lock
 static
 .vscode
+coverage

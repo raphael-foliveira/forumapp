@@ -1,11 +1,12 @@
-import express from "express";
-import AuthController from "../controllers/auth.controller";
-import { verifyToken } from "../middleware/auth.middleware";
+import express from 'express';
+import { verifyToken } from '../middleware/auth.middleware';
+import { authController } from '../controllers';
+import { useHandler, useHandlers } from './use-handler';
 
 const authRouter = express.Router();
 
-authRouter.post("/login", AuthController.logInHandler);
-authRouter.post("/logout", verifyToken, AuthController.logOutHandler);
-authRouter.post("/verify-token", AuthController.checkToken);
+authRouter.post('/login', useHandlers(authController.logIn));
+authRouter.post('/logout', useHandlers(verifyToken, authController.logOut));
+authRouter.post('/verify-token', useHandler(authController.checkToken));
 
 export default authRouter;

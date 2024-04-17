@@ -1,10 +1,11 @@
-import express from "express";
-import PostController from "../controllers/post.controller";
-import { verifyToken } from "../middleware/auth.middleware";
+import express from 'express';
+import { authenticated } from '../middleware/auth.middleware';
+import { postController } from '../controllers';
+import { useHandler } from './use-handler';
 
 const postRouter = express.Router();
 
-postRouter.get("/:id", PostController.getPostHandler);
-postRouter.post("/", verifyToken, PostController.createPostHandler);
+postRouter.get('/:id', useHandler(postController.getPost));
+postRouter.post('/', useHandler(authenticated(postController.createPost)));
 
 export default postRouter;

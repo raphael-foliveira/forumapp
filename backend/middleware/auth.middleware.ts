@@ -1,56 +1,24 @@
 import { NextFunction, Request, RequestHandler, Response } from 'express';
-import InvalidToken from '../entities/invalidToken.entity';
-import User from '../entities/user.entity';
-import { getUserFromToken } from '../services/token.service';
 import { z } from 'zod';
-
-export interface AuthenticatedRequest extends Request {
-  user?: User;
-}
+import {
+  extractTokenFromHeader,
+  getUserFromRequest,
+} from '../services/token.service';
+import { AuthenticatedRequestHandler } from '../types/request';
 
 export const verifyToken = async (
-  req: AuthenticatedRequest,
-  res: Response,
-  next: NextFunction
+  req: Request,
+  _: Response,
+  next: NextFunction,
 ) => {
-  const bearerHeader = req.headers.authorization;
-  if (typeof bearerHeader === 'undefined') {
-    res.status(403).json({
-      message: 'Token not found.',
-    });
-    return;
-  }
-  const bearer = bearerHeader;
-  const bearerToken = bearer.split(' ')[1];
-
-  const invalidToken = await InvalidToken.objects.findOne({
-    where: {
-      token: bearerToken,
-    },
-  });
-
-  if (invalidToken) {
-    res.status(403).json({
-      json: 'This token is invalid.',
-    });
-    return;
-  }
-
-  const authenticatedUser = await getUserFromToken(bearerToken);
-  if (!authenticatedUser) {
-    res.status(403).json({
-      message: 'Invalid Token',
-    });
-    return;
-  }
-  req.user = authenticatedUser;
+  await extractTokenFromHeader(req);
   next();
 };
 
 export const validateLogoutBody = (
   req: Request,
-  res: Response,
-  next: NextFunction
+  _: Response,
+  next: NextFunction,
 ) => {
   const logoutSchema = z.object({
     token: z.string(),
@@ -61,11 +29,20 @@ export const validateLogoutBody = (
   next();
 };
 
-export const validateCheckTokenBody: RequestHandler = (req, res, next) => {
+export const validateCheckTokenBody: RequestHandler = (req, _, next) => {
   const checkTokenSchema = z.object({
     token: z.string(),
   });
 
   req.body = checkTokenSchema.parse(req.body);
   next();
+};
+
+export const authenticated = (
+  fn: AuthenticatedRequestHandler,
+): RequestHandler => {
+  return async (req, res) => {
+    const user = await getUserFromRequest(req);
+    return fn(req, res, user);
+  };
 };

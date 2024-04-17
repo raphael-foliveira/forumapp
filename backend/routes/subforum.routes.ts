@@ -1,20 +1,34 @@
-import express from "express";
-import multer from "multer";
-import SubForumController from "../controllers/subforum.controller";
-import { verifyToken } from "../middleware/auth.middleware";
+import express from 'express';
+import multer from 'multer';
+import { verifyToken, authenticated } from '../middleware/auth.middleware';
+import { subforumController } from '../controllers';
+import { useHandler, useHandlers } from './use-handler';
 
-const upload = multer({ dest: "./static/subforums" });
+const upload = multer({ dest: './static/subforums' });
 
 const subForumRouter = express.Router();
 
-subForumRouter.route("/")
-	.get(SubForumController.getSubForumsHandler)
-	.post(verifyToken, upload.single("image"), SubForumController.createSubForumHandler);
+subForumRouter
+  .route('/')
+  .get(subforumController.getSubForums)
+  .post(
+    useHandlers(
+      verifyToken,
+      upload.single('image'),
+      authenticated(subforumController.createSubForum),
+    ),
+  );
 
-subForumRouter.get("/:name", SubForumController.getSubForumHandler);
+subForumRouter.get('/:name', useHandler(subforumController.getSubForum));
 
-subForumRouter.put("/:id", verifyToken, SubForumController.updateSubForumHandler);
+subForumRouter.put(
+  '/:id',
+  useHandler(authenticated(subforumController.updateSubForum)),
+);
 
-subForumRouter.delete("/:id/:memberid", verifyToken, SubForumController.deleteMemberHandler);
+subForumRouter.delete(
+  '/:id/:memberid',
+  useHandler(authenticated(subforumController.deleteMember)),
+);
 
 export default subForumRouter;

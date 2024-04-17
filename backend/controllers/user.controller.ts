@@ -1,54 +1,38 @@
-import { Request, Response } from "express";
-import User from "../entities/user.entity";
+import { RequestHandler } from 'express';
+import { userRepository } from '../entities/user.entity';
+import { HttpError } from '../middleware/error-handling.middleware';
 
-export default {
-
-	async getAllUsersHandler(req: Request, res: Response) {
-		const allUsers = await User.objects.find();
-		res.status(200).json(allUsers);
-	},
-
-	async getUserHandler(req: Request, res: Response) {
-		const user = await User.objects.findOne({
-			where: {
-				id: req.params.userId,
-			},
-			relations: ["posts", "votes"],
-			select: {
-				id: true,
-				username: true,
-				email: true,
-				profilePicture: true,
-			}
-		});
-		if (!user) {
-			res.sendStatus(404);
-			return;
-		}
-		res.status(200).json(user);
-	},
-
-	async createUserHandler(req: Request, res: Response) {
-		const newUserData = req.body;
-		try {
-
-			const newUser = User.objects.create({
-				email: newUserData.email,
-				username: newUserData.username,
-				password: newUserData.password,
-				profilePicture: req.file?.path || "",
-			});
-			const result = await User.objects.save(newUser);
-			if (!result) {
-				res.sendStatus(400);
-				return;
-			}
-			res.status(201).json(result);
-		} catch (e) {
-			res.status(400).json({
-				error: "Username or Email already exists."
-			});
-		}
-	},
+export const getAllUsers: RequestHandler = async (_, res) => {
+  const allUsers = await userRepository.find();
+  return res.status(200).json(allUsers);
 };
 
+export const getUser: RequestHandler = async ({ params }, res) => {
+  const user = await userRepository.findOne({
+    where: {
+      id: params.userId,
+    },
+    relations: ['posts', 'votes'],
+    select: {
+      id: true,
+      username: true,
+      email: true,
+      profilePicture: true,
+    },
+  });
+  if (!user) {
+    throw new HttpError(404, 'User not found');
+  }
+  return res.status(200).json(user);
+};
+
+export const createUser: RequestHandler = async (req, res) => {
+  const newUser = userRepository.create({
+    email: req.body.email,
+    username: req.body.username,
+    password: req.body.password,
+    profilePicture: req.file?.path || '',
+  });
+  const result = await userRepository.save(newUser);
+  return res.status(201).json(result);
+};

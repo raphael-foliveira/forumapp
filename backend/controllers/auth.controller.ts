@@ -1,77 +1,46 @@
-import { Request, Response } from 'express';
-import User from '../entities/user.entity';
-import jwt, { Secret } from 'jsonwebtoken';
+import { RequestHandler } from 'express';
+import { userRepository } from '../entities/user.entity';
 import { getUserFromToken } from '../services/token.service';
-import InvalidToken from '../entities/invalidToken.entity';
+import { HttpError } from '../middleware/error-handling.middleware';
+import { tokenService } from '../services';
 
-export default {
-  async logInHandler(req: Request, res: Response) {
-    console.log('Loggin user in...');
-    const user = await User.objects.findOne({
-      where: {
-        username: req.body.username,
-      },
-      select: {
-        id: true,
-        username: true,
-        password: true,
-      },
-    });
-    if (user && user.password === req.body.password) {
-      console.log(`Correct password for user ${user.username}`);
+export const logIn: RequestHandler = async ({ body }, res) => {
+  const { password, username } = body;
+  const user = await userRepository.findOne({
+    where: {
+      username,
+    },
+    select: {
+      id: true,
+      username: true,
+      password: true,
+    },
+  });
 
-      const token = jwt.sign(
-        {
-          username: req.body.username,
-          id: user.id,
-          email: user.email,
-        },
-        process.env.JWT_SECRET as Secret,
-        { expiresIn: '120h' }
-      );
-      res
-        .status(201)
-        .json({ token: token, username: user.username, userId: user.id });
-      return;
-    }
-    console.log('Authentication failed');
-    res.status(404).json({
-      error: 'Credenciais inválidas.',
-    });
-  },
+  if (!user || user.password !== password) {
+    throw new HttpError(401, 'Credenciais inválidas');
+  }
 
-  async logOutHandler(req: Request, res: Response) {
-    const { token, userId } = req.body;
+  const token = tokenService.signToken({
+    id: user.id,
+    username: user.username,
+    email: user.email,
+  });
 
-    const newInvalidToken = InvalidToken.objects.create({
-      owner: {
-        id: userId,
-      },
-      token,
-    });
+  await userRepository.update({ id: user.id }, { token });
 
-    const savedInvalidToken = await InvalidToken.objects.save(newInvalidToken);
-    if (!savedInvalidToken) {
-      res.status(500).json({
-        error: 'Something went wrong.',
-      });
-      return;
-    }
+  return res
+    .status(200)
+    .json({ token: token, username: user.username, userId: user.id });
+};
 
-    console.log('Token invalidated');
-    console.log(savedInvalidToken);
+export const logOut: RequestHandler = async (req, res) => {
+  const { userData } = await tokenService.verifyAuthToken(req);
+  await userRepository.update({ id: userData.id }, { token: undefined });
+  return res.status(200).json({ message: 'logged out' });
+};
 
-    res.status(201).json(savedInvalidToken);
-  },
-
-  async checkToken(req: Request, res: Response) {
-    const user = await getUserFromToken(req.body.token);
-    if (!user) {
-      res.sendStatus(404);
-      return;
-    }
-    console.log('Authenticated from token:');
-    console.log(user);
-    res.status(200).json(user);
-  },
+export const checkToken: RequestHandler = async ({ body }, res) => {
+  const user = await getUserFromToken(body.token);
+  return res.status(200).json(user);
 };

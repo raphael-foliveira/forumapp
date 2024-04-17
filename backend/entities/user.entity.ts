@@ -1,37 +1,46 @@
-import { Column, Entity, ManyToMany, OneToMany, PrimaryGeneratedColumn } from "typeorm";
-import { dataSource } from "../db/data-source";
-import Post from "./post.entity";
-import SubForum from "./subforum.entity";
-import Vote from "./vote.entity";
+import {
+  Column,
+  Entity,
+  ManyToMany,
+  OneToMany,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
+import { dataSource } from '../db/data-source';
+import Post from './post.entity';
+import SubForum from './subforum.entity';
+import Vote from './vote.entity';
 
 @Entity()
 export default class User {
-    static objects = dataSource.getRepository(User);
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
 
-    @PrimaryGeneratedColumn("uuid")
-    id: string;
+  @Column({ unique: true })
+  username: string;
 
-    @Column({ unique: true })
-    username: string;
+  @Column({ unique: true })
+  email: string;
 
-    @Column({ unique: true })
-    email: string;
+  @Column({ select: false })
+  password: string;
 
-    @Column({ select: false })
-    password: string;
+  @Column({ nullable: true })
+  profilePicture: string;
 
-    @Column({ nullable: true })
-    profilePicture: string;
+  @OneToMany(() => Post, (post) => post.author, { onDelete: 'SET NULL' })
+  posts: Post[];
 
-    @OneToMany(() => Post, (post) => post.author, { onDelete: "SET NULL" })
-    posts: Post[];
+  @OneToMany(() => User, (user) => user.friends)
+  friends: User[];
 
-    @OneToMany(() => User, (user) => user.friends)
-    friends: User[];
+  @ManyToMany(() => SubForum, (subForum) => subForum.members)
+  subForums: SubForum[];
 
-    @ManyToMany(() => SubForum, (subForum) => subForum.members)
-    subForums: SubForum[];
+  @OneToMany(() => Vote, (vote) => vote.user)
+  votes: Vote[];
 
-    @OneToMany(() => Vote, (vote) => vote.user)
-    votes: Vote[];
+  @Column({ unique: true })
+  token?: string;
 }
+
+export const userRepository = dataSource.getRepository(User);
