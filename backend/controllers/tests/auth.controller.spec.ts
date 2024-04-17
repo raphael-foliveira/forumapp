@@ -1,48 +1,14 @@
-import { randomUUID } from 'crypto';
 import { Agent, agent } from 'supertest';
 import { createApp } from '../../app';
-import User, { userRepository } from '../../entities/user.entity';
-import jwt from 'jsonwebtoken';
-import { UpdateResult } from 'typeorm';
-import { UserJwtPayload } from '../../services/token.service';
+import {
+  userFindOneSpy,
+  userUpdateSpy,
+} from '../../test/mocks/repository/user.mocks';
+import { jwtSignSpy, jwtVerifySpy } from '../../test/mocks/service/token.mocks';
+import { userStub } from '../../test/stubs/user.stubs';
 
 describe('authController', () => {
   let request: Agent;
-  const userStub: User = {
-    email: 'stub@email.com',
-    friends: [],
-    id: randomUUID(),
-    username: 'stubUser',
-    password: 'stubpassword',
-    posts: [],
-    profilePicture: '',
-    subForums: [],
-    votes: [],
-  };
-
-  const jwtPayloadStub: UserJwtPayload = {
-    id: userStub.id,
-    email: userStub.email,
-    username: userStub.username,
-  };
-
-  const updateResultStub: UpdateResult = { generatedMaps: [], raw: [] };
-
-  const userFindOneSpy = jest
-    .spyOn(userRepository, 'findOne')
-    .mockImplementation(async () => userStub);
-
-  const jwtSignSpy = jest
-    .spyOn(jwt, 'sign')
-    .mockImplementation(() => 'valid-token');
-
-  const userUpdateSpy = jest
-    .spyOn(userRepository, 'update')
-    .mockImplementation(async () => updateResultStub);
-
-  const jwtVerifySpy = jest
-    .spyOn(jwt, 'verify')
-    .mockImplementation(() => jwtPayloadStub);
 
   beforeEach(() => {
     jest.clearAllMocks();
